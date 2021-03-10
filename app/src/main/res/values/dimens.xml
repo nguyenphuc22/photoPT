@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="High">8dp</dimen>
+    <dimen name="Medium">4dp</dimen>
+
+    <dimen name="marginTopView">8dp</dimen>
+    <dimen name="marginLeftView">8dp</dimen>
+
+    <dimen name="radiusCard">8dp</dimen>
+    <dimen name="stokeWithCard">4dp</dimen>
+
+    <dimen name="sizeTextItemType">18dp</dimen>
+</resources>

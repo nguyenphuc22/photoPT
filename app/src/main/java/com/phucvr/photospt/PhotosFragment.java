@@ -1,15 +1,26 @@
 package com.phucvr.photospt;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.phucvr.photospt.adapter.AdapterAlbum;
+import com.phucvr.photospt.adapter.AdapterPhotos;
+import com.phucvr.photospt.model.ItemView;
+import com.phucvr.photospt.model.Photo;
+
+import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,8 +76,23 @@ public class PhotosFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_photos, container, false);
     }
 
+    RecyclerView recyclerView;
+    AdapterAlbum adapterAlbum;
+    ArrayList<ItemView> dataImage;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        dataImage = ImageGrallery.getAlbum(getActivity());
+
+        recyclerView = getView().findViewById(R.id.recyclerPhotos);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+        adapterAlbum = new AdapterAlbum(dataImage,getActivity());
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapterAlbum);
+
     }
 }

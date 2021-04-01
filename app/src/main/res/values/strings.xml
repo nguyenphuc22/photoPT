@@ -6,6 +6,27 @@
     <string name="tab_2">Tìm kiếm</string>
     <string name="tab_3">Thư viện</string>
 
+    <string name="date">Tháng 6 Năm 2021</string>
+
+    <string name="Place">Địa điểm</string>
+    <string name="SeenAll">Xem tất cả</string>
+    <string name="MyActivity">Hoạt động của bạn</string>
+    <string name="ImageFavorite">Ảnh yêu thích</string>
+    <string name="ADDED">Mới thêm gần đây</string>
+    <string name="Category">Danh mục</string>
+    <string name="Screenshots">Ảnh chụp màn hình</string>
+    <string name="Portrait_photo">Ảnh chụp chân dung</string>
+    <string name="Video">Video</string>
+    <string name="VideoAndPhoto360">Video và ảnh 360 độ</string>
+    <string name="PhotoScanner">Máy quét ảnh</string>
+    <string name="MotionPhoto">Ảnh chuyển động</string>
+    <string name="CreativeWork">Tác phẩm sáng tạo</string>
+    <string name="Creation_saved">Đã lưu tác phẩm sáng tạo</string>
+    <string name="Animations">Ảnh động</string>
+    <string name="Photo_collage">Ảnh ghép</string>
+    <string name="Film">Phim</string>
+    <string name="Photo_effects">Ảnh có hiệu ứng điện ảnh</string>
+    
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

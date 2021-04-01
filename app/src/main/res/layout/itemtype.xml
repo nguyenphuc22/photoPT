@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/imgIcon"
         android:text="Ảnh yêu thích"
-        android:layout_marginLeft="@dimen/marginLeftView"
+        android:layout_marginLeft="@dimen/marginLeftView_low"
         android:textSize="@dimen/sizeTextItemType"
         />
 

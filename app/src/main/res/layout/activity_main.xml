@@ -41,13 +41,13 @@
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-    <androidx.viewpager2.widget.ViewPager2
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tabs"
         android:layout_below="@id/toolBar"
-        />
+        android:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
@@ -56,6 +56,7 @@
         app:tabMode="fixed"
         android:layout_alignParentBottom="true"
         android:elevation="@dimen/High"
+        android:background="@color/colorPrimary"
         >
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/imgPhoto"
         android:text="Máy Ảnh"
-        android:layout_marginTop="@dimen/marginTopView"
+        android:layout_marginTop="@dimen/marginTopView_low"
         />
 
 </RelativeLayout>

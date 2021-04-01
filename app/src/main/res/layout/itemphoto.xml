@@ -1,13 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/padding_low"
+    >
 
     <ImageView
         android:id="@+id/imgPhoto"
-        style="@style/ItemPhoto"
-        android:src="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+    </ImageView>
+
+    <TextView
+        android:id="@+id/txtDuration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|top"
+        android:textColor="@color/colorWhite"
+        android:layout_marginRight="@dimen/marginRightView_low"
+        android:layout_marginTop="@dimen/marginTopView_low"
+
+        style="@style/TextAppearance.AppCompat.Small"
         />
 
-</RelativeLayout>
+</FrameLayout>

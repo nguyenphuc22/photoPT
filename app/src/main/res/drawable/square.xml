@@ -4,10 +4,6 @@
     android:thicknessRatio="2.0"
     android:useLevel="false" >
 
-    <corners
-        android:radius="8dp"
-        />
-
     <solid android:color="@android:color/transparent" />
 
     <stroke

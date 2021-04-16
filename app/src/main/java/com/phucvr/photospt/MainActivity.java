@@ -9,7 +9,10 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -27,20 +30,22 @@ public class MainActivity extends AppCompatActivity {
     ImageView imgProfile;
     Toolbar toolbar;
 
-    private static final int _READ_PERMISSION_CODE = 202;
+    private static final int _WRITE_PERMISSION_CODE = 202;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!checkPermissionReadExternal()){
-            ActivityCompat.requestPermissions(MainActivity.this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},_READ_PERMISSION_CODE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, _WRITE_PERMISSION_CODE);
         } else {
 
         }
+
         setContentView(R.layout.activity_main);
         init();
         settingToolBar(toolbar);
+
 
 
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -58,13 +63,27 @@ public class MainActivity extends AppCompatActivity {
         tableLayout.setupWithViewPager(viewPager);
 
         // Set Text And Icon
-        tableLayout.getTabAt(0).setIcon(R.drawable.ic_baseline_image_24);
         tableLayout.getTabAt(0).setText(getString(R.string.tab_1));
-        tableLayout.getTabAt(1).setIcon(R.drawable.ic_baseline_search_24);
         tableLayout.getTabAt(1).setText(getString(R.string.tab_2));
-        tableLayout.getTabAt(2).setIcon(R.drawable.ic_baseline_photo_library_24);
         tableLayout.getTabAt(2).setText(getString(R.string.tab_3));
 
+
+        tableLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
     }
 
@@ -78,16 +97,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == _READ_PERMISSION_CODE){
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this,"Read external stoage permission granted",Toast.LENGTH_SHORT).show();
-            } else
-            {
-                Toast.makeText(this,"Read external stoage permission denied",Toast.LENGTH_SHORT).show();
-            }
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        if (requestCode == _WRITE_PERMISSION_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
         }
     }
 

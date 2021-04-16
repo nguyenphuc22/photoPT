@@ -2,40 +2,61 @@ package com.phucvr.photospt.model;
 
 import java.util.ArrayList;
 
-public class Album extends ItemView{
+public class Album {
 
-    ArrayList<Photo> Album;
+    private String name;
+    private int number;
+    private String thumbNail;
+    private ArrayList<ItemView> mPhotos;
 
-    public Album(ArrayList<Photo> album,Type type) {
-        super(type);
-        Album = album;
+    public ArrayList<ItemView> getmPhotos() {
+        return mPhotos;
     }
 
-    public ArrayList<Photo> getAlbum() {
-        return Album;
+    public void setmPhotos(ArrayList<ItemView> mPhotos) {
+        this.mPhotos = mPhotos;
     }
 
-    public void setAlbum(ArrayList<Photo> album) {
-        Album = album;
+    public Album(String name, int number, ArrayList<ItemView> mPhotos) {
+        this.name = name;
+        this.number = number;
+        this.mPhotos = mPhotos;
     }
 
-    public void add(Photo photo)
-    {
-        this.Album.add(photo);
+    public Album(String name, int number, String thumbNail, ArrayList<ItemView> mPhotos) {
+        this.name = name;
+        this.number = number;
+        this.thumbNail = thumbNail;
+        this.mPhotos = mPhotos;
     }
 
-    public void addAll(ArrayList<Photo> photos)
-    {
-        this.Album.addAll(photos);
+    public Album(String name, int number, String thumbNail) {
+        this.name = name;
+        this.number = number;
+        this.thumbNail = thumbNail;
     }
 
-    @Override
-    public void setType(Type type) {
-        this.type = type;
+    public String getName() {
+        return name;
     }
 
-    @Override
-    public Type getType() {
-        return this.type;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public String getThumbNail() {
+        return thumbNail;
+    }
+
+    public void setThumbNail(String thumbNail) {
+        this.thumbNail = thumbNail;
     }
 }

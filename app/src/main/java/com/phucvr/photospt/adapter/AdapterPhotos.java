@@ -1,81 +1,106 @@
 package com.phucvr.photospt.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.phucvr.photospt.R;
-import com.phucvr.photospt.model.Photo;
+import com.phucvr.photospt.model.Photos;
+import com.phucvr.photospt.model.ItemView;
+import com.phucvr.photospt.model.Time;
+import com.phucvr.photospt.model.Type;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class AdapterPhotos extends RecyclerView.Adapter<AdapterPhotos.ImgViewHolder> {
-    ArrayList<Photo> data;
-    Context context;
+public class AdapterPhotos extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public AdapterPhotos(Context context, ArrayList<Photo> data) {
-        this.context = context;
-        this.data = data;
+    ArrayList<ItemView> mArrayList;
+    Context mContext;
+    private AdapterView.OnItemClickListener mOnItemClickListener;
+
+    public AdapterPhotos(ArrayList<ItemView> mArrayList, Context mContext, AdapterView.OnItemClickListener mOnItemClickListener) {
+        this.mArrayList = mArrayList;
+        this.mContext = mContext;
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    public AdapterPhotos(ArrayList<ItemView> mArrayList, Context mContext) {
+        this.mArrayList = mArrayList;
+        this.mContext = mContext;
     }
 
 
     @NonNull
     @Override
-    public ImgViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(context);
-        View itemView = inflater.inflate(R.layout.itemphoto, parent, false);
-        return new ImgViewHolder(itemView);
-    }
-
-    @Override
-    public void onBindViewHolder(@NonNull ImgViewHolder holder, int position) {
-        ImgViewHolder imgViewHolder = (ImgViewHolder) holder;
-
-        Log.i("Video", data.get(position).getPath());
-
-        Glide.with(this.context)
-                .load(data.get(position).getPath())
-                .centerCrop()
-                .placeholder(R.drawable.ic_launcher_foreground)
-                .into(imgViewHolder.imgPhoto);
-
-        if (!data.get(position).isImage()) {
-            imgViewHolder.txtDuration.setText(
-                    new SimpleDateFormat("mm:ss").format(new Date(data.get(position).getDuration())));
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view;
+        if (viewType == 0)
+        {
+            view = inflater.inflate(R.layout.itemphotos,parent,false);
+            return new AlbumViewHolder(view);
         } else {
-            imgViewHolder.txtDuration.setText(" ");
+
+            view = inflater.inflate(R.layout.itemtime,parent,false);
+            return new TimeViewHolder(view);
         }
     }
 
+    @Override
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) == 0)
+        {
+            AlbumViewHolder albumViewHolder = (AlbumViewHolder) holder;
+            Photos mPhotos = (Photos) this.mArrayList.get(position);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this.mContext,4);
+            AdapterPhoto adapterPhoto = new AdapterPhoto(this.mContext, mPhotos.getAlbum());
+            albumViewHolder.recyclerView.setLayoutManager(gridLayoutManager);
+            albumViewHolder.recyclerView.setAdapter(adapterPhoto);
+        } else
+        {
+            TimeViewHolder timeViewHolder = (TimeViewHolder) holder;
+            Time time = (Time) this.mArrayList.get(position);
+            timeViewHolder.txtTime.setText(time.getMonYear());
+        }
+    }
 
     @Override
     public int getItemCount() {
-        return this.data.size();
+        return this.mArrayList.size();
     }
 
-    public class ImgViewHolder extends RecyclerView.ViewHolder
-    {
-        ImageView imgPhoto;
-        TextView txtDuration;
-        public ImgViewHolder(@NonNull View itemView) {
-            super(itemView);
-            imgPhoto = itemView.findViewById(R.id.imgPhoto);
-            txtDuration = itemView.findViewById(R.id.txtDuration);
+    @Override
+    public int getItemViewType(int position) {
+        if (this.mArrayList.get(position).getType() == Type.ALBUM)
+        {
+            return 0;
+        } else {
+            return 1;
         }
-
     }
 
+    class AlbumViewHolder extends RecyclerView.ViewHolder {
+        RecyclerView recyclerView;
+        public AlbumViewHolder(@NonNull View itemView) {
+            super(itemView);
+            recyclerView = itemView.findViewById(R.id.recyclerView);
+        }
+    }
 
+    class TimeViewHolder extends RecyclerView.ViewHolder{
 
+        TextView txtTime;
+        public TimeViewHolder(@NonNull View itemView) {
+            super(itemView);
+            txtTime = itemView.findViewById(R.id.txtTime);
+        }
+    }
 
 }

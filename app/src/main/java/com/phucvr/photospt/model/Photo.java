@@ -1,10 +1,13 @@
 package com.phucvr.photospt.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-public class Photo {
+public class Photo implements Parcelable {
 
     protected String path;
     protected long  time;
@@ -21,6 +24,27 @@ public class Photo {
         this.displayName = displayName;
         setImage(typePhoto);
     }
+
+    protected Photo(Parcel in) {
+        path = in.readString();
+        time = in.readLong();
+        duration = in.readLong();
+        size = in.readLong();
+        displayName = in.readString();
+        isImage = in.readByte() != 0;
+    }
+
+    public static final Creator<Photo> CREATOR = new Creator<Photo>() {
+        @Override
+        public Photo createFromParcel(Parcel in) {
+            return new Photo(in);
+        }
+
+        @Override
+        public Photo[] newArray(int size) {
+            return new Photo[size];
+        }
+    };
 
     public String getPath() {
         return path;
@@ -80,5 +104,20 @@ public class Photo {
         {
             this.isImage = false;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(path);
+        dest.writeLong(time);
+        dest.writeLong(duration);
+        dest.writeLong(size);
+        dest.writeString(displayName);
+        dest.writeByte((byte) (isImage ? 1 : 0));
     }
 }

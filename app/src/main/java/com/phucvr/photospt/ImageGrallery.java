@@ -38,7 +38,7 @@ public class ImageGrallery {
         Time oldTime = new Time(0,Type.TIME);
         Time newTime = new Time(0,Type.TIME);
 
-        uri = MediaStore.Files.getContentUri("external");
+        uri = MediaStore.Files.getContentUri(MediaStore.VOLUME_INTERNAL);
 
         String[] projection = {
                 MediaStore.MediaColumns.DATA,

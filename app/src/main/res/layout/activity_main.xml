@@ -30,6 +30,7 @@
             style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
             android:layout_gravity="left"
             android:background="@color/colorWhite"
+            android:onClick="onClickCamera"
             android:src="@drawable/ic_baseline_camera_alt_24"
             />
 

@@ -172,7 +172,7 @@ public class ImageGrallery {
         Time newTime = new Time(0,Type.TIME);
 
         uri = MediaStore.Files.getContentUri("external");
-
+        Log.i("Image_Path",uri.getPath());
         String[] projection = {
                 MediaStore.MediaColumns.DATA,
                 MediaStore.Files.FileColumns.DURATION,
@@ -297,7 +297,7 @@ public class ImageGrallery {
                 column_index_mediaType;
 
         ArrayList<Photo> dataImage = new ArrayList<>();
-        uri = MediaStore.Files.getContentUri("external");
+        uri = MediaStore.Files.getContentUri(MediaStore.VOLUME_INTERNAL);
 
         String[] projection = {
                 MediaStore.MediaColumns.DATA,
@@ -331,6 +331,7 @@ public class ImageGrallery {
             size = cursor.getLong(column_index_size);
             media_type = cursor.getInt(column_index_mediaType);
 
+            Log.i("Path",cursor.getString(column_index_data));
             Log.i("Date",cursor.getString(column_index_added));
             Log.i("Size",cursor.getString(column_index_size));
             Log.i("Duration",Long.toString(cursor.getLong(column_index_duration)));
@@ -351,110 +352,6 @@ public class ImageGrallery {
                 }
             }
 
-        }
-
-        return dataImage;
-    }
-
-    public static ArrayList<Photo> getVideos(Context context)
-    {
-        Uri uri;
-        Cursor cursor;
-
-        int     column_index_data,
-                column_index_added,
-                column_index_size,
-                column_index_duration,
-                column_index_displayName;
-
-        ArrayList<Photo> dataImage = new ArrayList<>();
-        uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = {
-                MediaStore.MediaColumns.DATA,
-                MediaStore.Video.Media.DURATION,
-                MediaStore.Video.Media.DATE_ADDED,
-                MediaStore.Video.Media.DISPLAY_NAME,
-                MediaStore.Video.Media.SIZE,
-        };
-
-        String orderBy = MediaStore.Video.Media.DATE_ADDED;
-        cursor = context.getContentResolver().
-                query(uri, projection, null, null, orderBy + " DESC");
-
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_added = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED);
-        column_index_duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-        column_index_size = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
-        column_index_displayName = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
-
-        String path,displayName;
-        long time,duration,size;
-
-        while (cursor.moveToNext()){
-            path = cursor.getString(column_index_data);
-            time = cursor.getLong(column_index_added);
-            duration = cursor.getLong(column_index_duration);
-            displayName = cursor.getString(column_index_displayName);
-            size = cursor.getLong(column_index_size);
-
-            Log.i("Date",cursor.getString(column_index_added));
-            Log.i("Size",cursor.getString(column_index_size));
-            Log.i("Duration",Long.toString(cursor.getLong(column_index_duration)));
-            Log.i("DisplayName",cursor.getString(column_index_displayName));
-
-            dataImage.add(new Photo(path,time,duration,size,displayName, TypePhoto.VIDEO));
-        }
-
-        return dataImage;
-    }
-
-    public static ArrayList<Photo> getImages(Context context)
-    {
-        Uri uri;
-        Cursor cursor;
-        int     column_index_data,
-                column_index_added,
-                column_index_size,
-                column_index_duration,
-                column_index_displayName;
-        ArrayList<Photo> dataImage = new ArrayList<>();
-        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-
-        String[] projection = {
-                MediaStore.MediaColumns.DATA,
-                MediaStore.Images.Media.DURATION,
-                MediaStore.Images.Media.DATE_ADDED,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.SIZE,
-        };
-
-        String orderBy = MediaStore.Video.Media.DATE_ADDED;
-        cursor = context.getContentResolver().
-                query(uri, projection, null, null, orderBy + " DESC");
-
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_added = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED);
-        column_index_duration = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DURATION);
-        column_index_size = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE);
-        column_index_displayName = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-
-        String path,displayName;
-        long time,duration,size;
-
-        while (cursor.moveToNext()){
-            path = cursor.getString(column_index_data);
-            time = cursor.getLong(column_index_added);
-            duration = cursor.getLong(column_index_duration);
-            displayName = cursor.getString(column_index_displayName);
-            size = cursor.getLong(column_index_size);
-
-            //Log.i("Date",cursor.getString(column_index_added));
-            //Log.i("Size",cursor.getString(column_index_size));
-            //Log.i("Duration",Long.toString(cursor.getLong(column_index_duration)));
-            //Log.i("DisplayName",cursor.getString(column_index_displayName));
-
-            dataImage.add(new Photo(path,time,duration,size,displayName, TypePhoto.IMAGE));
         }
 
         return dataImage;

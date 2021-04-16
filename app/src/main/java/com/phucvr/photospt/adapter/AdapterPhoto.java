@@ -48,7 +48,7 @@ public class AdapterPhoto extends RecyclerView.Adapter<AdapterPhoto.ImgViewHolde
     public void onBindViewHolder(@NonNull ImgViewHolder holder, int position) {
         ImgViewHolder imgViewHolder = (ImgViewHolder) holder;
 
-        Log.i("Video", data.get(position).getPath());
+        Log.i("Adapter Photo Path", data.get(position).getPath());
 
         Glide.with(this.context)
                 .load(data.get(position).getPath())

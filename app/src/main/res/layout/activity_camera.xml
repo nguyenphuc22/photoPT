@@ -15,6 +15,18 @@
         app:camera_flash="auto"
         app:camera_facing="back"
         app:camera_focus="continuous"
-        app:camera_permissions="camera" />
+        app:camera_permissions="camera"
+        android:layout_above="@id/imgCamera"
+        />
+
+    <ImageView
+        android:id="@+id/imgCamera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_baseline_camera_alt_40"
+        android:onClick="onClickCap"
+        />
 
 </RelativeLayout>

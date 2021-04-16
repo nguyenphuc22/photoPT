@@ -18,139 +18,6 @@ import java.util.ArrayList;
 
 public class ImageGrallery {
 
-    public static Album getAlbumTrash(Context context)
-    {
-        Uri uri;
-        Cursor cursor;
-
-        int     column_index_data,
-                column_index_added,
-                column_index_size,
-                column_index_duration,
-                column_index_displayName,
-                column_index_trash,
-                column_index_mediaType;
-
-        ArrayList<ItemView> result = new ArrayList<>();
-
-        ArrayList<Photo> dataImage = new ArrayList<>();
-
-        Time oldTime = new Time(0,Type.TIME);
-        Time newTime = new Time(0,Type.TIME);
-
-        uri = MediaStore.Files.getContentUri(MediaStore.VOLUME_INTERNAL);
-
-        String[] projection = {
-                MediaStore.MediaColumns.DATA,
-                MediaStore.Files.FileColumns.DURATION,
-                MediaStore.Files.FileColumns.DATE_ADDED,
-                MediaStore.Files.FileColumns.DISPLAY_NAME,
-                MediaStore.Files.FileColumns.SIZE,
-                MediaStore.Files.FileColumns.MEDIA_TYPE,
-                MediaStore.Files.FileColumns.IS_TRASHED
-        };
-
-        String orderBy = MediaStore.Video.Media.DATE_ADDED;
-        cursor = context.getContentResolver().
-                query(uri, projection, null, null, orderBy + " DESC");
-
-        column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-        column_index_added = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED);
-        column_index_duration = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-        column_index_size = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
-        column_index_displayName = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
-        column_index_mediaType = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE);
-        column_index_trash = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.IS_TRASHED);
-
-        String path,displayName;
-        long time,duration,size;
-        int media_type;
-        String isTrash;
-
-        if (cursor.moveToNext())
-        {
-            path = cursor.getString(column_index_data);
-            time = cursor.getLong(column_index_added);
-            duration = cursor.getLong(column_index_duration);
-            displayName = cursor.getString(column_index_displayName);
-            size = cursor.getLong(column_index_size);
-            media_type = cursor.getInt(column_index_mediaType);
-            isTrash = cursor.getString(column_index_trash);
-            if (isTrash == "1")
-            {
-                switch (media_type)
-                {
-                    case MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE:
-                    {
-                        dataImage.add(new Photo(path,time,duration,size,displayName, TypePhoto.IMAGE));
-                        break;
-                    }
-                    case  MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO:
-                    {
-                        dataImage.add(new Photo(path,time,duration,size,displayName, TypePhoto.VIDEO));
-                        break;
-                    }
-                }
-
-            }
-            oldTime.setDuration(time);
-        }
-
-        while (cursor.moveToNext()) {
-
-            path = cursor.getString(column_index_data);
-            time = cursor.getLong(column_index_added);
-            duration = cursor.getLong(column_index_duration);
-            displayName = cursor.getString(column_index_displayName);
-            size = cursor.getLong(column_index_size);
-            media_type = cursor.getInt(column_index_mediaType);
-
-            Log.i("ImageGra Date",cursor.getString(column_index_added));
-            Log.i("ImageGra Size",cursor.getString(column_index_size));
-            Log.i("ImageGra Duration",Long.toString(cursor.getLong(column_index_duration)));
-            Log.i("ImageGra DisplayName",cursor.getString(column_index_displayName));
-            Log.i("ImageGra MimeType", Integer.toString(media_type));
-
-            newTime.setDuration(time);
-
-
-            if (!oldTime.getMonYear().equals(newTime.getMonYear()))
-            {
-
-
-                result.add(new Time(oldTime.getDuration(), Type.TIME));
-                result.add(new Photos(dataImage, Type.ALBUM));
-
-                dataImage = new ArrayList<>();
-
-                oldTime.setDuration(time);
-
-                Log.i("ImageGra Time Old",oldTime.getMonYear());
-                Log.i("ImageGra Time New",newTime.getMonYear());
-            }
-
-            switch (media_type)
-            {
-                case MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE:
-                {
-                    dataImage.add(new Photo(path,time,duration,size,displayName, TypePhoto.IMAGE));
-                    break;
-                }
-                case  MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO:
-                {
-                    dataImage.add(new Photo(path,time,duration,size,displayName, TypePhoto.VIDEO));
-                    break;
-                }
-            }
-
-
-
-
-        }
-        Album album = new Album("Trash",result.size() / 2,result);
-
-        return album;
-    }
 
     public static ArrayList<ItemView> getAlbum(Context context)
     {
@@ -244,7 +111,6 @@ public class ImageGrallery {
 
                 if (!oldTime.getMonYear().equals(newTime.getMonYear())) {
 
-
                     result.add(new Time(oldTime.getDuration(), Type.TIME));
                     result.add(new Photos(dataImage, Type.ALBUM));
 
@@ -280,6 +146,11 @@ public class ImageGrallery {
             */
 
 
+        }
+        if (dataImage.size() != 0)
+        {
+            result.add(new Time(oldTime.getDuration(), Type.TIME));
+            result.add(new Photos(dataImage, Type.ALBUM));
         }
         return result;
     }
@@ -353,7 +224,6 @@ public class ImageGrallery {
             }
 
         }
-
         return dataImage;
     }
 }

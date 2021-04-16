@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 
+import com.camerakit.CameraKit;
 import com.camerakit.CameraKitView;
 
 import java.io.File;
@@ -25,11 +26,10 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         cameraKitView = findViewById(R.id.camera);
-
         cameraKitView.setGestureListener(new CameraKitView.GestureListener() {
             @Override
             public void onTap(CameraKitView cameraKitView, float v, float v1) {
-
+                cameraKitView.toggleFacing();
             }
 
             @Override
@@ -39,13 +39,19 @@ public class CameraActivity extends AppCompatActivity {
 
             @Override
             public void onDoubleTap(CameraKitView cameraKitView, float v, float v1) {
-
+                cameraKitView.captureVideo(new CameraKitView.VideoCallback() {
+                    @Override
+                    public void onVideo(CameraKitView cameraKitView, Object o) {
+                        
+                    }
+                });
             }
 
             @Override
             public void onPinch(CameraKitView cameraKitView, float v, float v1, float v2) {
 
             }
+
         });
 
     }

@@ -25,6 +25,16 @@ public class Photo implements Parcelable {
         setImage(typePhoto);
     }
 
+    public Photo(String path)
+    {
+        this.path = path;
+        this.time = 0;
+        this.duration = 0;
+        this.size = 0;
+        this.displayName = path;
+        setImage(TypePhoto.IMAGE);
+    }
+
     protected Photo(Parcel in) {
         path = in.readString();
         time = in.readLong();

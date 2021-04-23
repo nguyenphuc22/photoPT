@@ -5,6 +5,20 @@
         android:id="@+id/item_edit"
         android:title="@string/Edit"
         android:icon="@drawable/ic_baseline_create_24"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/item_delete"
+        android:title="@string/Delete"
+        android:icon="@drawable/ic_baseline_delete_24"
+        app:showAsAction="ifRoom"
+        />
+
+    <item
+        android:id="@+id/item_inFor"
+        android:title="@string/InFor"
+        android:icon="@drawable/ic_baseline_info_24"
+        app:showAsAction="ifRoom"
         />
 </menu>

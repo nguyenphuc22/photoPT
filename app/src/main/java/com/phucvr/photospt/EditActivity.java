@@ -57,8 +57,18 @@ public class EditActivity extends AppCompatActivity {
         setContentView(R.layout.activity_edit);
         imagePicker = findViewById(R.id.img);
         videoView = findViewById(R.id.video);
+
         Intent intent = getIntent();
-        mPhoto = intent.getParcelableExtra(Setting.PICKERITEM);
+        if (intent.getAction().equals(Intent.ACTION_SEND)) {
+
+            mPhoto = intent.getParcelableExtra(Setting.PICKERITEM);
+
+        } else {
+
+            mPhoto = new Photo(intent.getData().toString());
+
+        }
+
         if (mPhoto != null)
         {
             if (mPhoto.isImage()) {
@@ -66,6 +76,7 @@ public class EditActivity extends AppCompatActivity {
                 imagePicker.setVisibility(View.VISIBLE);
                 videoView.setVisibility(View.INVISIBLE);
                 Glide.with(this)
+                        .asBitmap()
                         .load(mPhoto.getPath())
                         .error(R.drawable.ic_launcher_foreground)
                         .apply(new RequestOptions())
@@ -146,6 +157,17 @@ public class EditActivity extends AppCompatActivity {
 
                     }
                 }
+                break;
+            }
+            case R.id.item_delete:
+            {
+                //Gọi hàm xóa ở đây nha ông
+                break;
+            }
+            case R.id.item_inFor:
+            {
+                //Gọi hàm xem infor ở đây nha ông
+                break;
             }
         }
 

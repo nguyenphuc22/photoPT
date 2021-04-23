@@ -83,6 +83,7 @@ public class AdapterPhoto extends RecyclerView.Adapter<AdapterPhoto.ImgViewHolde
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context.getApplicationContext(), EditActivity.class);
+                    intent.setAction(Intent.ACTION_SEND);
                     intent.putExtra(Setting.PICKERITEM, (Parcelable) data.get(getAdapterPosition()));
                     context.startActivity(intent);
                 }

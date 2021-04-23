@@ -68,6 +68,7 @@ public class ImageGrallery {
         if (cursor.moveToNext())
         {
             path = cursor.getString(column_index_data);
+            
             time = cursor.getLong(column_index_added);
             duration = cursor.getLong(column_index_duration);
             displayName = cursor.getString(column_index_displayName);

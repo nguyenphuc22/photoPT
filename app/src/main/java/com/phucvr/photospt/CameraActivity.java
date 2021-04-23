@@ -26,6 +26,11 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         cameraKitView = findViewById(R.id.camera);
+        cameraKitView.captureVideo(new CameraKitView.VideoCallback() {
+            @Override
+            public void onVideo(CameraKitView cameraKitView, Object o) {
+            }
+        });
         cameraKitView.setGestureListener(new CameraKitView.GestureListener() {
             @Override
             public void onTap(CameraKitView cameraKitView, float v, float v1) {

@@ -99,5 +99,11 @@ public class PhotosFragment extends Fragment {
 
     }
 
+    public void newPicOrVideo()
+    {
+        dataImage = ImageGrallery.getAlbum(getActivity());
+        adapterPhotos = new AdapterPhotos(dataImage,getActivity());
+        recyclerView.setAdapter(adapterPhotos);
+    }
 
 }

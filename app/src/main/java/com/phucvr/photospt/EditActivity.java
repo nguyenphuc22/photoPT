@@ -162,11 +162,17 @@ public class EditActivity extends AppCompatActivity {
             case R.id.item_delete:
             {
                 //Gọi hàm xóa ở đây nha ông
+                //Data
+                mPhoto.getPath();
                 break;
             }
             case R.id.item_inFor:
             {
                 //Gọi hàm xem infor ở đây nha ông
+                //Data
+                mPhoto.getPath();
+
+                
                 break;
             }
         }

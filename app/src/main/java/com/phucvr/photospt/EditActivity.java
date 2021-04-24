@@ -3,6 +3,7 @@ package com.phucvr.photospt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.core.content.FileProvider;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
@@ -173,6 +174,23 @@ public class EditActivity extends AppCompatActivity {
                 mPhoto.getPath();
 
                 
+                break;
+            }
+            case R.id.item_Share:
+            {
+                Intent shareIntent = new Intent();//share
+                shareIntent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                shareIntent.setFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                shareIntent.setAction(Intent.ACTION_SEND);
+                Uri imageUri = FileProvider.getUriForFile(
+                        this,
+                        "com.phucvr.photospt.provider", //(use your app signature + ".provider" )
+                        new File(mPhoto.getPath()));
+                shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                shareIntent.setType("image/*");
+                this.grantUriPermission("android", imageUri, Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                startActivity(Intent.createChooser(shareIntent, "Share File"));
+                finish();
                 break;
             }
         }

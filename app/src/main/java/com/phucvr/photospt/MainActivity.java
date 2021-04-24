@@ -2,11 +2,14 @@ package com.phucvr.photospt;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -23,11 +26,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.tabs.TabLayout;
 
 
@@ -46,12 +51,10 @@ import ly.img.android.pesdk.ui.utils.PermissionRequest;
 
 public class MainActivity extends AppCompatActivity  {
 
-    TabLayout tableLayout;
-    ViewPager viewPager;
-    ImageView imgProfile;
     Toolbar toolbar;
     PhotosFragment photosFragment;
-
+    BottomNavigationView bottomNavigationView;
+    private ActionBar actionBar;
     static final int REQUEST_IMAGE_CAPTURE = 1;
     static final int REQUEST_VIDEO_CAPTURE = 2;
 
@@ -73,50 +76,50 @@ public class MainActivity extends AppCompatActivity  {
         settingToolBar(toolbar);
 
 
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        //Create Fragment
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(R.string.Image);
         photosFragment = new PhotosFragment("nick");
+        loadFragment(photosFragment);
+        //Create Fragment
         PhotosFindFragment findFragment = new PhotosFindFragment("nick");
         PhotosLibaryFragment libaryFragment = new PhotosLibaryFragment("nick");
 
-        adapter.addFragment(photosFragment);
-        adapter.addFragment(findFragment);
-        adapter.addFragment(libaryFragment);
-
-        // Set adapter
-        viewPager.setAdapter(adapter);
-        tableLayout.setupWithViewPager(viewPager);
-
-        // Set Text And Icon
-        tableLayout.getTabAt(0).setText(getString(R.string.tab_1));
-        tableLayout.getTabAt(1).setText(getString(R.string.tab_2));
-        tableLayout.getTabAt(2).setText(getString(R.string.tab_3));
-
-
-        tableLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
 
     }
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment fragment;
+            switch (item.getItemId()) {
+                case R.id.item_Image:
+                {
+                    toolbar.setTitle(R.string.Image);
+                    fragment = new PhotosFragment("nick");
+                    loadFragment(fragment);
+                    return true;
+                }
+                case R.id.item_Album:
+                {
+                    toolbar.setTitle(R.string.Album);
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         if (requestCode == _WRITE_PERMISSION_CODE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
         }
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -144,10 +147,8 @@ public class MainActivity extends AppCompatActivity  {
 
     private void init()
     {
-        tableLayout = findViewById(R.id.tabs);
-        viewPager = findViewById(R.id.view_pager);
         toolbar = findViewById(R.id.toolBar);
-        imgProfile = findViewById(R.id.imgProfile);
+        bottomNavigationView = findViewById(R.id.bottom_navigation);
     }
 
     public void onClickCamera(View view) {
@@ -177,5 +178,12 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    private void loadFragment(Fragment fragment) {
+        // load fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
 }

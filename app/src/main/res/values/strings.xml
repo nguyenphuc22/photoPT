@@ -2,8 +2,8 @@
     <string name="app_name">photosPT</string>
     <string name="title_bar">Google Photos</string>
 
-    <string name="tab_1">Ảnh</string>
-    <string name="tab_2">Tìm kiếm</string>
+    <string name="Image">Ảnh</string>
+    <string name="Album">Album</string>
     <string name="tab_3">Thư viện</string>
 
     <string name="date">Tháng 6 Năm 2021</string>

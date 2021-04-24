@@ -35,4 +35,8 @@
         <item name="android:layout_height">120dp</item>
     </style>
 
+    <style name="BottomNavigationView"  >
+        <item name="backgroundTint">@color/colorWhite</item>
+    </style>
+
 </resources>

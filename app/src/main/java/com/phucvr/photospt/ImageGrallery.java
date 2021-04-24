@@ -6,10 +6,9 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.phucvr.photospt.model.Album;
-import com.phucvr.photospt.model.Photos;
 import com.phucvr.photospt.model.ItemView;
 import com.phucvr.photospt.model.Photo;
+import com.phucvr.photospt.model.Photos;
 import com.phucvr.photospt.model.Time;
 import com.phucvr.photospt.model.Type;
 import com.phucvr.photospt.model.TypePhoto;

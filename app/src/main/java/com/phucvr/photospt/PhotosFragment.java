@@ -1,7 +1,9 @@
 package com.phucvr.photospt;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,18 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-
-import com.phucvr.photospt.adapter.AdapterPhoto;
 import com.phucvr.photospt.adapter.AdapterPhotos;
-import com.phucvr.photospt.model.Album;
 import com.phucvr.photospt.model.ItemView;
-import com.phucvr.photospt.model.Photo;
 
 import java.util.ArrayList;
 
@@ -105,5 +97,6 @@ public class PhotosFragment extends Fragment {
         adapterPhotos = new AdapterPhotos(dataImage,getActivity());
         recyclerView.setAdapter(adapterPhotos);
     }
+
 
 }

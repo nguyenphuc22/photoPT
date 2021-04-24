@@ -1,30 +1,32 @@
 package com.phucvr.photospt;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
-
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
-import android.util.Log;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.phucvr.photospt.model.Photo;
+import com.phucvr.photospt.model.PhotoDetail;
 import com.phucvr.photospt.model.Setting;
 import com.phucvr.photospt.model.VideoViewUtils;
 
 import java.io.File;
+import java.io.IOException;
 
 import ly.img.android.pesdk.PhotoEditorSettingsList;
 import ly.img.android.pesdk.assets.filter.basic.FilterPackBasic;
@@ -163,16 +165,21 @@ public class EditActivity extends AppCompatActivity {
             {
                 //Gọi hàm xóa ở đây nha ông
                 //Data
-                mPhoto.getPath();
+                DeletePhoto(mPhoto.getPath());
                 break;
             }
             case R.id.item_inFor:
             {
                 //Gọi hàm xem infor ở đây nha ông
                 //Data
-                mPhoto.getPath();
 
-                
+                PhotoDetail a=new PhotoDetail();
+                try {
+                    a=showDetail(mPhoto.getPath());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 break;
             }
         }
@@ -227,5 +234,30 @@ public class EditActivity extends AppCompatActivity {
 
         return settingsList;
     }
+    public static PhotoDetail showDetail(String path) throws IOException {
+        ExifInterface exif= new ExifInterface(path);
+        PhotoDetail result= new PhotoDetail();
+        result.date=exif.getAttribute(ExifInterface.TAG_DATETIME_DIGITIZED);
+        String[] split=path.split("/");
+        result.name=split[split.length-1];
+        result.path=path;
+        result.pixel=exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)+"x"+exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH);
+        result.location=exif.getAttribute(ExifInterface.TAG_SUBJECT_LOCATION);
+        File file=new File(path);
+        long l= file.length();
+        if(l< 1024*1024) {
+            result.size=Long.toString(l/1024)+" KB";
+        }
+        else
+            result.size= (Long.toString(l/(1024*1024)))+" MB";
+        return result;
+    }
+    public void DeletePhoto(String path)  {
+        ContentResolver contentResolver = getContentResolver();
+        contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
 
+    }
 }
+
+

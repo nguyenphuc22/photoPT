@@ -16,6 +16,11 @@
     <string name="Recording">Quay Phim</string>
     <string name="ChangeTheme">Đổi Giao Diện</string>
     <string name="preference_file_key">loadTheme</string>
+    <string name="slide">Trình Chiếu</string>
+
+    <string name="Finished">Trình Chiếu Kết Thúc</string>
+    <string name="Start">Bắt đầu</string>
+
 
 
 </resources>

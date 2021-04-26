@@ -1,9 +1,11 @@
 package nguyenphuc.vr.photo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -12,14 +14,23 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import nguyenphuc.vr.photo.fragment.AlbumsFragment;
 import nguyenphuc.vr.photo.fragment.PhotosFragment;
@@ -36,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
 
     PhotosFragment photosFragment;
 
+    private String currentPhotoPath;
     private String mode_Theme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +135,12 @@ public class MainActivity extends AppCompatActivity {
                 changeTheme();
                 break;
             }
+            case R.id.item_slide:
+            {
+                Intent intent = new Intent(this,SlideActivity.class);
+                startActivity(intent);
+                break;
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -188,11 +206,34 @@ public class MainActivity extends AppCompatActivity {
     private void dispatchTakePictureIntent() {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        File photoFile = null;
         try {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        } catch (ActivityNotFoundException e) {
-            // display error state to the user
+            photoFile = createImageFile();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        Uri imageUri = FileProvider.getUriForFile(this.getBaseContext(),
+                getPackageName() + ".provider",
+                photoFile);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
+        startActivityForResult(takePictureIntent,REQUEST_IMAGE_CAPTURE);
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bitmap image = null;
+            try {
+                image = MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.parse(currentPhotoPath));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            MediaStore.Images.Media.insertImage(getContentResolver(),image, String.valueOf(System.currentTimeMillis()),"NickSeven");
+        }
+        photosFragment.newPicOrVideo();
     }
 
     private void dispatchTakeVideoIntent() {
@@ -201,4 +242,22 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpeg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = "file:" + image.getAbsolutePath();
+        return image;
+    }
+
 }

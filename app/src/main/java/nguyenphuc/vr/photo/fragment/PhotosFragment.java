@@ -18,6 +18,7 @@ import nguyenphuc.vr.photo.R;
 import nguyenphuc.vr.photo.adapter.AdapterPhotos;
 import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.ItemView;
+import nguyenphuc.vr.photo.model.Photos;
 
 public class PhotosFragment extends Fragment {
 
@@ -60,4 +61,5 @@ public class PhotosFragment extends Fragment {
         adapterPhotos = new AdapterPhotos(dataImage,getActivity());
         recyclerView.setAdapter(adapterPhotos);
     }
+
 }

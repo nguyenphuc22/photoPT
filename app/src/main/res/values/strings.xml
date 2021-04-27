@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">photo</string>
 
-    <string name="date">Tháng 6 Năm 2021</string>
+
+    <string name="ok">Tắt</string>
 
     <string name="Image">Ảnh</string>
     <string name="Album">Album</string>
@@ -17,10 +18,18 @@
     <string name="ChangeTheme">Đổi Giao Diện</string>
     <string name="preference_file_key">loadTheme</string>
     <string name="slide">Trình Chiếu</string>
+    <string name="DefaultImage">Đặt hình nền</string>
 
     <string name="Finished">Trình Chiếu Kết Thúc</string>
     <string name="Start">Bắt đầu</string>
 
+    <string name="info">Thông tin</string>
 
+    <string name="date">Thời Gian</string>
+    <string name="size">Kích Thước</string>
+    <string name="pixel">Pixel</string>
+    <string name="path">Đường dẫn</string>
+    <string name="name">Tên</string>
+    <string name="location">Địa điểm</string>
 
 </resources>

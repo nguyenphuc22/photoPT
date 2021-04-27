@@ -27,4 +27,10 @@
         android:title="@string/Share"
         android:icon="@drawable/ic_baseline_share_24"
         />
+
+    <item
+        android:id="@+id/item_defaultImage"
+        android:title="@string/DefaultImage"
+        app:showAsAction="never"
+        />
 </menu>

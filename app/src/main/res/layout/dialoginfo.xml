@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/padding_medium"
+    >
+
+    <TextView
+        android:id="@+id/txtDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/date"
+        />
+
+    <TextView
+        android:id="@+id/txtSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/size"
+        android:layout_below="@id/txtDate"
+        />
+
+    <TextView
+        android:id="@+id/txtPixel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pixel"
+        android:layout_below="@id/txtSize"
+        />
+
+    <TextView
+        android:id="@+id/txtPath"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/path"
+        android:layout_below="@id/txtPixel"
+        />
+
+    <TextView
+        android:id="@+id/txtName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/name"
+        android:layout_below="@id/txtPath"
+        />
+
+    <TextView
+        android:id="@+id/txtLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/location"
+        android:layout_below="@id/txtName"
+        />
+
+</RelativeLayout>

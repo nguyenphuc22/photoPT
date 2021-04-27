@@ -56,7 +56,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                    Manifest.permission.CAMERA}, WRITE_PERMISSION_CODE);
+                    Manifest.permission.CAMERA,
+                    Manifest.permission.LOCATION_HARDWARE,
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.SET_WALLPAPER}, WRITE_PERMISSION_CODE);
         }
 
         loadTheme();

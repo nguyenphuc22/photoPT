@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import java.util.ArrayList;
 
@@ -66,6 +67,7 @@ public class SlideAsyncTask extends AsyncTask<ArrayList<ItemView>, Photo, Void> 
         Glide.with(contextParent)
                 .load(photo.getPath())
                 .centerCrop()
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .into(imgA);
     }
 

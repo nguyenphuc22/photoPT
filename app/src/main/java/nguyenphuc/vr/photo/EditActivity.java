@@ -6,8 +6,11 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
+import android.app.WallpaperManager;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -43,6 +46,7 @@ import ly.img.android.pesdk.ui.model.state.UiConfigFrame;
 import ly.img.android.pesdk.ui.model.state.UiConfigOverlay;
 import ly.img.android.pesdk.ui.model.state.UiConfigSticker;
 import ly.img.android.pesdk.ui.model.state.UiConfigText;
+import nguyenphuc.vr.photo.dialog.InFo_Dialog;
 import nguyenphuc.vr.photo.model.Photo;
 import nguyenphuc.vr.photo.model.PhotoDetail;
 import nguyenphuc.vr.photo.model.Setting;
@@ -161,9 +165,26 @@ public class EditActivity extends AppCompatActivity {
                 shareImageOrVideo();
                 break;
             }
+            case R.id.item_defaultImage:
+            {
+                setDefaultImage(mPhoto);
+                break;
+            }
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void setDefaultImage(Photo photo) {
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();//wallaper
+        Bitmap image = BitmapFactory.decodeFile(photo.getPath(),bmOptions);
+        WallpaperManager wallpaperManager = WallpaperManager.getInstance(this.getApplicationContext());
+        try {
+            wallpaperManager.setBitmap(image);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finish();
     }
 
     private void openEditor(Uri inputImage) {
@@ -214,7 +235,7 @@ public class EditActivity extends AppCompatActivity {
         return settingsList;
     }
 
-    public static void showDetail(String path) throws IOException {
+    public void showDetail(String path) throws IOException {
         ExifInterface exif= new ExifInterface(path);
         PhotoDetail result= new PhotoDetail();
         result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME_DIGITIZED));
@@ -232,13 +253,15 @@ public class EditActivity extends AppCompatActivity {
             result.setSize((Long.toString(size_File / (PhotoDetail.MB)))+" MB");
         }
 
+        InFo_Dialog inFo_dialog = new InFo_Dialog(result);
+        inFo_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.info));
     }
 
     public void DeletePhoto(String path)  {
         ContentResolver contentResolver = getContentResolver();
         contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
-
+        finish();
     }
 
     @Override

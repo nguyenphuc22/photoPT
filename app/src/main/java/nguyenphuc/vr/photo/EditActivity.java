@@ -1,11 +1,5 @@
 package nguyenphuc.vr.photo;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
-
 import android.app.WallpaperManager;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -23,6 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -238,7 +238,8 @@ public class EditActivity extends AppCompatActivity {
     public void showDetail(String path) throws IOException {
         ExifInterface exif= new ExifInterface(path);
         PhotoDetail result= new PhotoDetail();
-        result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME_DIGITIZED));
+
+        result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME));
         String[] split=path.split("/");
         result.setName(split[split.length-1]);
         result.setPath(path);
@@ -260,6 +261,9 @@ public class EditActivity extends AppCompatActivity {
     public void DeletePhoto(String path)  {
         ContentResolver contentResolver = getContentResolver();
         contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
+        finish();
+        contentResolver.delete(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
         finish();
     }

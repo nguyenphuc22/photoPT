@@ -1,17 +1,12 @@
 package nguyenphuc.vr.photo;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
-
 import android.app.WallpaperManager;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.ExifInterface;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,11 +19,20 @@ import android.view.View;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 import ly.img.android.pesdk.PhotoEditorSettingsList;
 import ly.img.android.pesdk.assets.filter.basic.FilterPackBasic;
@@ -241,14 +245,27 @@ public class EditActivity extends AppCompatActivity {
     }
 
     public void showDetail(String path) throws IOException {
+
         ExifInterface exif= new ExifInterface(path);
         PhotoDetail result= new PhotoDetail();
-        result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME_DIGITIZED));
+
+        result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME));
         String[] split=path.split("/");
         result.setName(split[split.length-1]);
         result.setPath(path);
         result.setPixel(exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)+"x"+exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
-        result.setLocation(exif.getAttribute(ExifInterface.TAG_SUBJECT_LOCATION));
+
+        Geocoder geocoder=new Geocoder(this, Locale.getDefault());
+        List<Address> addresses;
+
+        double[] LatLong = exif.getLatLong();
+
+        if(LatLong==null)
+            result.setLocation("Không có vị trí");
+        else {
+            addresses = geocoder.getFromLocation(LatLong[0],LatLong[1],1);
+            result.setLocation(addresses.get(0).getAddressLine(0) + addresses.get(0).getLocality());
+        }
         File file=new File(path);
         long size_File= file.length();
         if(size_File < PhotoDetail.MB ) {
@@ -265,6 +282,9 @@ public class EditActivity extends AppCompatActivity {
     public void DeletePhoto(String path)  {
         ContentResolver contentResolver = getContentResolver();
         contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
+
+        contentResolver.delete(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
         finish();
     }

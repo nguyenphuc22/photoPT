@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -27,14 +26,13 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import nguyenphuc.vr.photo.fragment.AlbumsFragment;
 import nguyenphuc.vr.photo.fragment.PhotosFragment;
-import nguyenphuc.vr.photo.model.Setting;
+import nguyenphuc.vr.photo.model.Settings;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,8 +81,8 @@ public class MainActivity extends AppCompatActivity {
     private void loadTheme() {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-        this.mode_Theme = sharedPref.getString(Setting.THEME, Setting.DARK_THEME);
-        if (this.mode_Theme.equals(Setting.DARK_THEME))
+        this.mode_Theme = sharedPref.getString(Settings.THEME, Settings.DARK_THEME);
+        if (this.mode_Theme.equals(Settings.DARK_THEME))
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
@@ -154,17 +152,17 @@ public class MainActivity extends AppCompatActivity {
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        if (this.mode_Theme.equals(Setting.LIGHT_THEME))
+        if (this.mode_Theme.equals(Settings.LIGHT_THEME))
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-            editor.putString(Setting.THEME, Setting.DARK_THEME);
+            editor.putString(Settings.THEME, Settings.DARK_THEME);
             editor.apply();
-            this.mode_Theme = Setting.DARK_THEME;
+            this.mode_Theme = Settings.DARK_THEME;
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-            editor.putString(Setting.THEME, Setting.LIGHT_THEME);
+            editor.putString(Settings.THEME, Settings.LIGHT_THEME);
             editor.apply();
-            this.mode_Theme = Setting.LIGHT_THEME;
+            this.mode_Theme = Settings.LIGHT_THEME;
         }
     }
 

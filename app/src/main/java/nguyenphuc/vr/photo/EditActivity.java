@@ -49,7 +49,7 @@ import ly.img.android.pesdk.ui.model.state.UiConfigText;
 import nguyenphuc.vr.photo.dialog.InFo_Dialog;
 import nguyenphuc.vr.photo.model.Photo;
 import nguyenphuc.vr.photo.model.PhotoDetail;
-import nguyenphuc.vr.photo.model.Setting;
+import nguyenphuc.vr.photo.model.Settings;
 import nguyenphuc.vr.photo.model.VideoViewUtils;
 
 public class EditActivity extends AppCompatActivity {
@@ -71,7 +71,7 @@ public class EditActivity extends AppCompatActivity {
         settingToolBar(toolbar);
         Intent intent = getIntent();
         if (intent.getAction().equals(Intent.ACTION_SEND)) {
-            mPhoto = intent.getParcelableExtra(Setting.PICKERITEM);
+            mPhoto = intent.getParcelableExtra(Settings.PICKERITEM);
         } else {
             mPhoto = new Photo(intent.getData().toString());
         }

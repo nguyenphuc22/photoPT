@@ -22,7 +22,7 @@ import java.util.Date;
 import nguyenphuc.vr.photo.EditActivity;
 import nguyenphuc.vr.photo.R;
 import nguyenphuc.vr.photo.model.Photo;
-import nguyenphuc.vr.photo.model.Setting;
+import nguyenphuc.vr.photo.model.Settings;
 
 public class AdapterPhoto extends RecyclerView.Adapter<AdapterPhoto.ImgViewHolder>{
     private ArrayList<Photo> data;
@@ -84,7 +84,7 @@ public class AdapterPhoto extends RecyclerView.Adapter<AdapterPhoto.ImgViewHolde
                 public void onClick(View v) {
                     Intent intent = new Intent(context.getApplicationContext(), EditActivity.class);
                     intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Setting.PICKERITEM, (Parcelable) data.get(getAdapterPosition()));
+                    intent.putExtra(Settings.PICKERITEM, (Parcelable) data.get(getAdapterPosition()));
                     context.startActivity(intent);
                 }
             });

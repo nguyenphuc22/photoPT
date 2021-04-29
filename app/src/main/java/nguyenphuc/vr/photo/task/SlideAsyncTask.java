@@ -61,14 +61,15 @@ public class SlideAsyncTask extends AsyncTask<ArrayList<ItemView>, Photo, Void> 
         Photo photo = values[0];
 
         ImageView imgA;
+        if (!contextParent.isDestroyed()) {
+            imgA = contextParent.findViewById(R.id.imagePhotoA);
 
-        imgA = contextParent.findViewById(R.id.imagePhotoA);
-
-        Glide.with(contextParent)
-                .load(photo.getPath())
-                .centerCrop()
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .into(imgA);
+            Glide.with(contextParent)
+                    .load(photo.getPath())
+                    .centerCrop()
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .into(imgA);
+        }
     }
 
     @Override

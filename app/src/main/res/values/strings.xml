@@ -2,7 +2,7 @@
     <string name="app_name">photo</string>
 
 
-    <string name="ok">Tắt</string>
+    <string name="ok">Đồng ý</string>
 
     <string name="Image">Ảnh</string>
     <string name="Album">Album</string>
@@ -31,6 +31,9 @@
     <string name="path">Đường dẫn</string>
     <string name="name">Tên</string>
     <string name="location">Địa điểm</string>
+    <string name="copy">Sao chép</string>
+    <string name="selectPath">Chọn đường dẫn</string>
+    <string name="cancel">Tắt</string>
 
 
 </resources>

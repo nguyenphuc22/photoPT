@@ -12,6 +12,39 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class ImageGrallery {
+
+    public static ArrayList<String> getDir(Context context)
+    {
+        Uri uri;
+        Cursor cursor;
+
+        int     column_index_dir;
+
+        uri = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        String[] projection = {
+                MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME,
+        };
+
+        cursor = context.getContentResolver().query(uri,projection,null,null,null);
+
+        String dir;
+        ArrayList<String> dirs = new ArrayList<>();
+
+        if (cursor.moveToNext())
+        {
+            column_index_dir = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME);
+            dir = cursor.getString(column_index_dir);
+
+            if (dir != null)
+            {
+                dirs.add(dir);
+            }
+
+        }
+        return dirs;
+    }
+
+
     public static ArrayList<ItemView> getAllAlbum(Context context)
     {
         Uri uri;
@@ -24,7 +57,8 @@ public class ImageGrallery {
                 column_index_duration,
                 column_index_displayName,
                 column_index_mediaType,
-                column_index_dir;
+                column_index_dir,
+                column_index_parent;
 
         ArrayList<ItemView> result = new ArrayList<>();
 
@@ -41,12 +75,14 @@ public class ImageGrallery {
                 MediaStore.Files.FileColumns.DISPLAY_NAME,
                 MediaStore.Files.FileColumns.SIZE,
                 MediaStore.Files.FileColumns.MEDIA_TYPE,
-                MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME
+                MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME,
         };
 
         String orderBy = MediaStore.Video.Media.BUCKET_DISPLAY_NAME;
+        String orderByTime = MediaStore.Video.Media.DATE_ADDED;
         cursor = context.getContentResolver().
-                query(uri, projection, null, null, orderBy + " DESC");
+                query(uri, projection, null, null, orderBy + " DESC"
+                + ", " + orderByTime + " DESC");
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         column_index_added = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED);
@@ -56,7 +92,7 @@ public class ImageGrallery {
         column_index_mediaType = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.MEDIA_TYPE);
         column_index_dir = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME);
 
-        String path,displayName,dir = null;
+        String path,displayName,dir,parent;
         long time,duration,size;
         int media_type;
         boolean isFirst = true;
@@ -70,7 +106,6 @@ public class ImageGrallery {
             displayName = cursor.getString(column_index_displayName);
             size = cursor.getLong(column_index_size);
             media_type = cursor.getInt(column_index_mediaType);
-
             switch (media_type)
             {
                 case MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE:
@@ -98,6 +133,7 @@ public class ImageGrallery {
                 size = cursor.getLong(column_index_size);
                 media_type = cursor.getInt(column_index_mediaType);
                 dir = cursor.getString(column_index_dir);
+
                 if (dir == null)
                     continue;
                 Log.i("ImageGra Date", cursor.getString(column_index_added));
@@ -106,6 +142,7 @@ public class ImageGrallery {
                 Log.i("ImageGra DisplayName", cursor.getString(column_index_displayName));
                 Log.i("ImageGra MimeType", Integer.toString(media_type));
                 Log.i("ImageGra Dir",cursor.getString(column_index_dir));
+                Log.i("ImageGra Path",path);
 
                 newTime.setName(dir);
 

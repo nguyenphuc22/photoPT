@@ -33,4 +33,10 @@
         android:title="@string/DefaultImage"
         app:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/item_copy"
+        android:title="@string/copy"
+        app:showAsAction="never"
+        />
 </menu>

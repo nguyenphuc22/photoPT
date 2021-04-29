@@ -34,7 +34,7 @@ public class InFo_Dialog extends DialogFragment {
 
         builder.setView(view)
                 .setTitle(R.string.info)
-                .setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+                .setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();

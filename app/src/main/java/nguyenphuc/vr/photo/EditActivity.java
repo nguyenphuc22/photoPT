@@ -170,6 +170,11 @@ public class EditActivity extends AppCompatActivity {
                 setDefaultImage(mPhoto);
                 break;
             }
+            case R.id.item_copy:
+            {
+
+                break;
+            }
         }
 
         return super.onOptionsItemSelected(item);

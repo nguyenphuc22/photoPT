@@ -10,4 +10,6 @@ public abstract class ItemView {
     public abstract void setType(Type type);
 
     public abstract Type getType();
+
+    public abstract String getTitle();
 }

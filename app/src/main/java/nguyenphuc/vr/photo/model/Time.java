@@ -34,4 +34,9 @@ public class Time extends ItemView{
     public Type getType() {
         return this.type;
     }
+
+    @Override
+    public String getTitle() {
+        return getMonYear();
+    }
 }

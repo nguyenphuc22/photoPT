@@ -48,8 +48,8 @@ public class AdapterPhotos extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             return new AlbumViewHolder(view);
         } else {
 
-            view = inflater.inflate(R.layout.itemtime,parent,false);
-            return new TimeViewHolder(view);
+            view = inflater.inflate(R.layout.itemtitle,parent,false);
+            return new TitleViewHolder(view);
         }
     }
 
@@ -65,9 +65,8 @@ public class AdapterPhotos extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             albumViewHolder.recyclerView.setAdapter(adapterPhoto);
         } else
         {
-            TimeViewHolder timeViewHolder = (TimeViewHolder) holder;
-            Time time = (Time) this.mArrayList.get(position);
-            timeViewHolder.txtTime.setText(time.getMonYear());
+            TitleViewHolder timeViewHolder = (TitleViewHolder) holder;
+            timeViewHolder.txtTitle.setText(this.mArrayList.get(position).getTitle());
         }
     }
 
@@ -94,12 +93,12 @@ public class AdapterPhotos extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
 
-    class TimeViewHolder extends RecyclerView.ViewHolder{
+    class TitleViewHolder extends RecyclerView.ViewHolder{
 
-        TextView txtTime;
-        public TimeViewHolder(@NonNull View itemView) {
+        TextView txtTitle;
+        public TitleViewHolder(@NonNull View itemView) {
             super(itemView);
-            txtTime = itemView.findViewById(R.id.txtTime);
+            txtTitle = itemView.findViewById(R.id.txtTitle);
         }
     }
 

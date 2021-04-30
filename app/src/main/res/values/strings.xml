@@ -34,6 +34,7 @@
     <string name="copy">Sao chép</string>
     <string name="selectPath">Chọn đường dẫn</string>
     <string name="cancel">Tắt</string>
+    <string name="fail">Thất bại</string>
 
 
 </resources>

@@ -13,6 +13,33 @@ import java.util.ArrayList;
 
 public class ImageGrallery {
 
+    public static String getPath(Context context,String dir)
+    {
+        Uri uri;
+        Cursor cursor;
+
+        int     column_index_dir;
+
+        uri = MediaStore.Files.getContentUri(MediaStore.VOLUME_EXTERNAL);
+        String[] projection = {
+                MediaStore.Files.FileColumns.DATA,
+        };
+
+        cursor = context.getContentResolver().query(uri,projection,null,null,null);
+        String path;
+        while (cursor.moveToNext())
+        {
+            column_index_dir = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
+            path = cursor.getString(column_index_dir);
+
+            if (path.contains(dir) && path.contains("emulated"))
+            {
+                return path;
+            }
+        }
+        return null;
+    }
+
     public static ArrayList<String> getDir(Context context)
     {
         Uri uri;
@@ -30,13 +57,14 @@ public class ImageGrallery {
         String dir;
         ArrayList<String> dirs = new ArrayList<>();
 
-        if (cursor.moveToNext())
+        while (cursor.moveToNext())
         {
             column_index_dir = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME);
             dir = cursor.getString(column_index_dir);
-
-            if (dir != null)
+            if (dir != null && !dirs.contains(dir))
             {
+                Log.i("ImageGrallery_Dir",dir);
+
                 dirs.add(dir);
             }
 

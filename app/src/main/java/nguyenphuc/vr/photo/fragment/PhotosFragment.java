@@ -55,6 +55,12 @@ public class PhotosFragment extends Fragment {
         recyclerView.setAdapter(adapterPhotos);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        newPicOrVideo();
+    }
+
     public void newPicOrVideo()
     {
         dataImage = ImageGrallery.getAlbum(getActivity());

@@ -55,4 +55,15 @@ public class AlbumsFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        albums = ImageGrallery.getAllAlbum(getActivity());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+
+        adapterAlbums = new AdapterPhotos(albums,getActivity());
+        recyclerView.setHasFixedSize(false);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        recyclerView.setAdapter(adapterAlbums);
+    }
 }

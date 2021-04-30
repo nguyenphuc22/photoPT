@@ -50,6 +50,7 @@ import ly.img.android.pesdk.ui.model.state.UiConfigFrame;
 import ly.img.android.pesdk.ui.model.state.UiConfigOverlay;
 import ly.img.android.pesdk.ui.model.state.UiConfigSticker;
 import ly.img.android.pesdk.ui.model.state.UiConfigText;
+import nguyenphuc.vr.photo.dialog.Copy_Dialog;
 import nguyenphuc.vr.photo.dialog.InFo_Dialog;
 import nguyenphuc.vr.photo.model.Photo;
 import nguyenphuc.vr.photo.model.PhotoDetail;
@@ -176,7 +177,8 @@ public class EditActivity extends AppCompatActivity {
             }
             case R.id.item_copy:
             {
-
+                Copy_Dialog copy_dialog = new Copy_Dialog(mPhoto);
+                copy_dialog.show(getSupportFragmentManager(),getString(R.string.selectPath));
                 break;
             }
         }

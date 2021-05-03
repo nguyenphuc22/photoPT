@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -13,7 +15,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +34,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import nguyenphuc.vr.photo.fragment.AlbumsFragment;
@@ -47,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String currentPhotoPath;
     private String mode_Theme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +90,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         this.mode_Theme = sharedPref.getString(Settings.THEME, Settings.DARK_THEME);
-        if (this.mode_Theme.equals(Settings.DARK_THEME))
-        {
+        if (this.mode_Theme.equals(Settings.DARK_THEME)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         } else {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
@@ -98,15 +105,13 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment;
             switch (item.getItemId()) {
-                case R.id.item_Image:
-                {
+                case R.id.item_Image: {
                     actionBar.setTitle(R.string.Image);
                     fragment = new PhotosFragment();
                     loadFragment(fragment);
                     return true;
                 }
-                case R.id.item_Album:
-                {
+                case R.id.item_Album: {
                     actionBar.setTitle(R.string.Album);
                     fragment = new AlbumsFragment();
                     loadFragment(fragment);
@@ -119,26 +124,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.item_TakePhoto:
-            {
+        switch (item.getItemId()) {
+            case R.id.item_TakePhoto: {
                 openCamera();
                 break;
             }
-            case R.id.item_Recording:
-            {
+            case R.id.item_Recording: {
                 openVideo();
                 break;
             }
-            case R.id.item_Theme:
-            {
+            case R.id.item_Theme: {
                 changeTheme();
                 break;
             }
-            case R.id.item_slide:
-            {
-                Intent intent = new Intent(this,SlideActivity.class);
+            case R.id.item_slide: {
+                Intent intent = new Intent(this, SlideActivity.class);
                 startActivity(intent);
                 break;
             }
@@ -152,8 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        if (this.mode_Theme.equals(Settings.LIGHT_THEME))
-        {
+        if (this.mode_Theme.equals(Settings.LIGHT_THEME)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             editor.putString(Settings.THEME, Settings.DARK_THEME);
             editor.apply();
@@ -168,18 +167,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
-    private void init()
-    {
+    private void init() {
         actionBar = findViewById(R.id.toolbar);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
     }
 
-    private void settingToolBar(Toolbar toolbar)
-    {
+    private void settingToolBar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
@@ -193,13 +190,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openCamera() {
-        Log.i("CLick Camera","Click");
+        Log.i("CLick Camera", "Click");
         dispatchTakePictureIntent();
     }
 
-    public void openVideo()
-    {
-        Log.i("Click Video","Click");
+    public void openVideo() {
+        Log.i("Click Video", "Click");
         dispatchTakeVideoIntent();
     }
 
@@ -217,8 +213,8 @@ public class MainActivity extends AppCompatActivity {
         Uri imageUri = FileProvider.getUriForFile(this.getBaseContext(),
                 getPackageName() + ".provider",
                 photoFile);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-        startActivityForResult(takePictureIntent,REQUEST_IMAGE_CAPTURE);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 
     }
 
@@ -228,13 +224,56 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap image = null;
             try {
-                image = MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.parse(currentPhotoPath));
+                image = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(currentPhotoPath));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            MediaStore.Images.Media.insertImage(getContentResolver(),image, String.valueOf(System.currentTimeMillis()),"NickSeven");
+            String name = String.valueOf(System.currentTimeMillis());
+            MediaStore.Images.Media.insertImage(getContentResolver(), image, name, "NickSeven");
+            String[] split = currentPhotoPath.split("/");
+            String file = "/" + split[1] + "/" + split[2] + "/" + split[3] + "/" + split[4] + "/" + name + ".jpg";
+            try {
+                ExifInterface exif = new ExifInterface(file);
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                String time = df.format(c.getTime());
+                exif.setAttribute(ExifInterface.TAG_DATETIME, time);
+
+                LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                LocationListener ll = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+
+                    }
+                };
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                lm.requestLocationUpdates("gps", 2000, 10, ll);
+                Location location=lm.getLastKnownLocation("gps");
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
+                exif.setLatLong(latitude,longitude);
+                exif.saveAttributes();
+                exif.saveAttributes();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            
+
+
+
+
+            photosFragment.newPicOrVideo();
         }
-        photosFragment.newPicOrVideo();
     }
 
     private void dispatchTakeVideoIntent() {

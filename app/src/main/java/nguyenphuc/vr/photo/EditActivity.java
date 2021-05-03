@@ -250,7 +250,6 @@ public class EditActivity extends AppCompatActivity {
 
         ExifInterface exif= new ExifInterface(path);
         PhotoDetail result= new PhotoDetail();
-
         result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME));
         String[] split=path.split("/");
         result.setName(split[split.length-1]);

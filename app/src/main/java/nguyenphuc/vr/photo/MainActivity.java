@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
                 SimpleDateFormat df = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
                 String time = df.format(c.getTime());
                 exif.setAttribute(ExifInterface.TAG_DATETIME, time);
-
+                exif.saveAttributes();
                 LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                 LocationListener ll = new LocationListener() {
                     @Override
@@ -258,11 +258,15 @@ public class MainActivity extends AppCompatActivity {
                 }
                 lm.requestLocationUpdates("gps", 2000, 10, ll);
                 Location location=lm.getLastKnownLocation("gps");
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
+                double longitude=0;
+                double latitude=0;
+                if(location!=null) {
+                    longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                }
                 exif.setLatLong(latitude,longitude);
                 exif.saveAttributes();
-                exif.saveAttributes();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }

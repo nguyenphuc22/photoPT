@@ -261,7 +261,7 @@ public class EditActivity extends AppCompatActivity {
 
         double[] LatLong = exif.getLatLong();
 
-        if(LatLong==null)
+        if(LatLong[0]==0&&LatLong[1]==0)
             result.setLocation("Không có vị trí");
         else {
             addresses = geocoder.getFromLocation(LatLong[0],LatLong[1],1);

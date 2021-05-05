@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.MediaController;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
@@ -52,6 +53,7 @@ import ly.img.android.pesdk.ui.model.state.UiConfigSticker;
 import ly.img.android.pesdk.ui.model.state.UiConfigText;
 import nguyenphuc.vr.photo.dialog.Copy_Dialog;
 import nguyenphuc.vr.photo.dialog.InFo_Dialog;
+import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.Photo;
 import nguyenphuc.vr.photo.model.PhotoDetail;
 import nguyenphuc.vr.photo.model.Settings;
@@ -131,6 +133,22 @@ public class EditActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item_like = menu.findItem(R.id.item_like);
+        MenuItem item_unLike = menu.findItem(R.id.item_unLike);
+        if (mPhoto.getPath().contains(ImageGrallery.FILENAME_LIKE))
+        {
+            item_like.setVisible(false);
+            item_unLike.setVisible(true);
+        } else
+        {
+            item_like.setVisible(true);
+            item_unLike.setVisible(false);
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId())
         {
@@ -179,6 +197,24 @@ public class EditActivity extends AppCompatActivity {
             {
                 Copy_Dialog copy_dialog = new Copy_Dialog(mPhoto);
                 copy_dialog.show(getSupportFragmentManager(),getString(R.string.selectPath));
+                break;
+            }
+            case R.id.item_like:
+            {
+                try {
+                    Copy_Dialog.copy(new File(mPhoto.getPath()),new File(ImageGrallery.getDirLike() + "/" + mPhoto.getDisplayName()));
+                    Log.i("EditActivity",ImageGrallery.getDirLike() + "/" + mPhoto.getDisplayName());
+                    ImageGrallery.galleryAddPic(ImageGrallery.getDirLike() + "/" + mPhoto.getDisplayName(),this);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this,getString(R.string.fail),Toast.LENGTH_SHORT).show();
+                }
+                break;
+            }
+            case R.id.item_unLike:
+            {
+                DeletePhoto(mPhoto.getPath());
                 break;
             }
         }

@@ -1,6 +1,7 @@
 package nguyenphuc.vr.photo.model;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
@@ -12,6 +13,21 @@ import java.net.URI;
 import java.util.ArrayList;
 
 public class ImageGrallery {
+
+    public static String EMULATED = "emulated";
+    public static String FILENAME_LIKE = "Like";
+    public static String MyFile = "myDir";
+    public static String NOMEDIA= ".nomedia";
+
+    public static String getDirMyFile()
+    {
+       return Environment.getExternalStorageDirectory() + "/" + ImageGrallery.MyFile;
+    }
+
+    public static String getDirLike()
+    {
+        return Environment.getExternalStorageDirectory() + "/" + MyFile +"/" + ImageGrallery.FILENAME_LIKE;
+    }
 
     public static String getPath(Context context,String dir)
     {
@@ -32,7 +48,7 @@ public class ImageGrallery {
             column_index_dir = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
             path = cursor.getString(column_index_dir);
 
-            if (path.contains(dir) && path.contains("emulated"))
+            if (path.contains(dir) && path.contains(EMULATED))
             {
                 return path;
             }
@@ -61,6 +77,8 @@ public class ImageGrallery {
         {
             column_index_dir = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.BUCKET_DISPLAY_NAME);
             dir = cursor.getString(column_index_dir);
+            if (dir != null)
+            Log.i("ImageGrallery_AllDir",dir);
             if (dir != null && !dirs.contains(dir))
             {
                 Log.i("ImageGrallery_Dir",dir);
@@ -85,8 +103,7 @@ public class ImageGrallery {
                 column_index_duration,
                 column_index_displayName,
                 column_index_mediaType,
-                column_index_dir,
-                column_index_parent;
+                column_index_dir;
 
         ArrayList<ItemView> result = new ArrayList<>();
 
@@ -347,5 +364,13 @@ public class ImageGrallery {
             result.add(new Photos(dataImage, Type.ALBUM));
         }
         return result;
+    }
+
+    public static void galleryAddPic(String path,Context context) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(path);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        context.sendBroadcast(mediaScanIntent);
     }
 }

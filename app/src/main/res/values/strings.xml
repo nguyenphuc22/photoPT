@@ -35,6 +35,7 @@
     <string name="selectPath">Chọn đường dẫn</string>
     <string name="cancel">Tắt</string>
     <string name="fail">Thất bại</string>
-
+    <string name="like">Thích ảnh</string>
+    <string name="unlike">Bỏ Thích</string>
 
 </resources>

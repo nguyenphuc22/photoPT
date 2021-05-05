@@ -39,4 +39,17 @@
         android:title="@string/copy"
         app:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/item_like"
+        android:title="@string/like"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/item_unLike"
+        android:title="@string/unlike"
+        app:showAsAction="never"
+        android:visible="false"
+        />
 </menu>

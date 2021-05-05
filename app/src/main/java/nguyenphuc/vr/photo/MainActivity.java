@@ -32,6 +32,7 @@ import java.util.Date;
 
 import nguyenphuc.vr.photo.fragment.AlbumsFragment;
 import nguyenphuc.vr.photo.fragment.PhotosFragment;
+import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.Settings;
 
 public class MainActivity extends AppCompatActivity {
@@ -40,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int REQUEST_VIDEO_CAPTURE = 2;
 
+
     private Toolbar actionBar;
     private BottomNavigationView bottomNavigationView;
+
 
     PhotosFragment photosFragment;
 
@@ -62,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadTheme();
 
+        createFile();
 
         init();
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -260,5 +264,22 @@ public class MainActivity extends AppCompatActivity {
         currentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
+
+    private void createFile() {
+        File Folder = new File(ImageGrallery.getDirMyFile());
+        Log.i("MainActivity", Folder.getPath());
+
+        if (Folder.mkdir()) {
+
+            Log.i("MainActivity", "Success!");
+            ImageGrallery.galleryAddPic(Folder.getPath(), this);
+            File mediaFile = new File(ImageGrallery.getDirLike());
+            mediaFile.mkdir();
+            Log.i("MainActivity",mediaFile.getPath());
+
+        }
+    }
+
+
 
 }

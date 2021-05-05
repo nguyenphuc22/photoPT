@@ -99,7 +99,7 @@ public class Copy_Dialog extends DialogFragment {
         return builder.create();
     }
 
-    private static void copy(File src, File dst) throws IOException {
+    public static void copy(File src, File dst) throws IOException {
         try (InputStream in = new FileInputStream(src)) {
             try (OutputStream out = new FileOutputStream(dst)) {
                 // Transfer bytes from in to out
@@ -112,7 +112,7 @@ public class Copy_Dialog extends DialogFragment {
         }
     }
 
-    private void galleryAddPic(String path) {
+    public void galleryAddPic(String path) {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
         File f = new File(path);
         Uri contentUri = Uri.fromFile(f);

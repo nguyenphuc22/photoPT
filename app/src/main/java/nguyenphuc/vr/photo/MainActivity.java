@@ -5,7 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -15,7 +17,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,6 +39,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import nguyenphuc.vr.photo.dialog.NewPassword_Dialog;
@@ -57,7 +64,9 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
 
     private String currentPhotoPath;
     private String mode_Theme;
+
     private String action_View;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,8 +101,7 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         photosFragment.newPicOrVideo(action_View);
     }
 
-    private void loadModeView()
-    {
+    private void loadModeView() {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -105,12 +113,13 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         this.mode_Theme = sharedPref.getString(Settings.THEME, Settings.DARK_THEME);
+        if (this.mode_Theme.equals(Settings.DARK_THEME)) {
 
-        if (this.mode_Theme.equals(Settings.DARK_THEME))
-        {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            if (this.mode_Theme.equals(Settings.DARK_THEME)) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            }
         }
     }
 
@@ -123,15 +132,13 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment;
             switch (item.getItemId()) {
-                case R.id.item_Image:
-                {
+                case R.id.item_Image: {
                     actionBar.setTitle(R.string.Image);
                     fragment = new PhotosFragment(action_View);
                     loadFragment(fragment);
                     return true;
                 }
-                case R.id.item_Album:
-                {
+                case R.id.item_Album: {
                     actionBar.setTitle(R.string.Album);
                     fragment = new AlbumsFragment();
                     loadFragment(fragment);
@@ -144,50 +151,42 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
 
     @SuppressLint("NonConstantResourceId")
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId())
-        {
-            case R.id.item_TakePhoto:
-            {
+    public boolean onOptionsItemSelected (@NonNull MenuItem item){
+        switch (item.getItemId()) {
+            case R.id.item_TakePhoto: {
                 openCamera();
                 break;
             }
-            case R.id.item_Recording:
-            {
+            case R.id.item_Recording: {
                 openVideo();
                 break;
             }
-            case R.id.item_Theme:
-            {
+            case R.id.item_Theme: {
                 changeTheme();
                 break;
             }
-            case R.id.item_slide:
-            {
-                Intent intent = new Intent(this,SlideActivity.class);
+            case R.id.item_slide: {
+                Intent intent = new Intent(this, SlideActivity.class);
                 startActivity(intent);
                 break;
             }
-            case R.id.item_HiddenMode:
-            {
+            case R.id.item_HiddenMode: {
                 SharedPreferences sharedPref = getSharedPreferences(
                         getString(R.string.preference_file_key), Context.MODE_PRIVATE);
-                String password_HiddenDir = sharedPref.getString(Settings.PASSWORD_HIDDENDIR,Settings.PASS_NULL);
-                Log.i("EditActivity",password_HiddenDir);
-                if (password_HiddenDir.contains(Settings.PASS_NULL))
-                {
+                String password_HiddenDir = sharedPref.getString(Settings.PASSWORD_HIDDENDIR, Settings.PASS_NULL);
+                Log.i("EditActivity", password_HiddenDir);
+                if (password_HiddenDir.contains(Settings.PASS_NULL)) {
                     // show dialog input new pass word
-                    NewPassword_Dialog newPassword_dialog = new NewPassword_Dialog(this,sharedPref,Settings.ACTION_HIDDEN_MODE);
+                    NewPassword_Dialog newPassword_dialog = new NewPassword_Dialog(this, sharedPref, Settings.ACTION_HIDDEN_MODE);
                     newPassword_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.newpassword));
 
                 } else {
                     // show dialog input pass word
-                    Password_Dialog password_dialog = new Password_Dialog(password_HiddenDir,this,Settings.ACTION_HIDDEN_MODE);
+                    Password_Dialog password_dialog = new Password_Dialog(password_HiddenDir, this, Settings.ACTION_HIDDEN_MODE);
                     password_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.password));
                 }
             }
-            case R.id.item_PublicMode:
-            {
+            case R.id.item_PublicMode: {
                 loadModeView();
                 changeModeViewPublic();
                 photosFragment.newPicOrVideo(action_View);
@@ -197,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         return super.onOptionsItemSelected(item);
     }
 
-    private void changeModeViewPublic() {
+    private void changeModeViewPublic () {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -205,20 +204,18 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         action_View = Settings.ACTION_VIEW_PUBLIC;
         editor.putString(Settings.ACTION_VIEW, Settings.ACTION_VIEW_PUBLIC);
         editor.apply();
-        if (!editor.commit())
-        {
-            Log.i("MainActivity","Fail");
+        if (!editor.commit()) {
+            Log.i("MainActivity", "Fail");
         }
     }
 
-    private void changeTheme() {
+    private void changeTheme () {
 
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        if (this.mode_Theme.equals(Settings.LIGHT_THEME))
-        {
+        if (this.mode_Theme.equals(Settings.LIGHT_THEME)) {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
             editor.putString(Settings.THEME, Settings.DARK_THEME);
             editor.apply();
@@ -232,11 +229,10 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
     }
 
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onPrepareOptionsMenu (Menu menu){
         MenuItem item_PublicMode = menu.findItem(R.id.item_PublicMode);
-        MenuItem item_HiddenMode= menu.findItem(R.id.item_HiddenMode);
-        if (action_View.equals(Settings.ACTION_VIEW_PUBLIC))
-        {
+        MenuItem item_HiddenMode = menu.findItem(R.id.item_HiddenMode);
+        if (action_View.equals(Settings.ACTION_VIEW_PUBLIC)) {
             item_HiddenMode.setVisible(true);
             item_PublicMode.setVisible(false);
         } else {
@@ -247,24 +243,22 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu,menu);
+    public boolean onCreateOptionsMenu (Menu menu){
+        getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
-    private void init()
-    {
+    private void init () {
         actionBar = findViewById(R.id.toolbar);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
     }
 
-    private void settingToolBar(Toolbar toolbar)
-    {
+    private void settingToolBar (Toolbar toolbar){
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
-    private void loadFragment(Fragment fragment) {
+    private void loadFragment (Fragment fragment){
         // load fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
@@ -272,19 +266,18 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         transaction.commit();
     }
 
-    public void openCamera() {
-        Log.i("CLick Camera","Click");
+    public void openCamera () {
+        Log.i("CLick Camera", "Click");
         dispatchTakePictureIntent();
     }
 
-    public void openVideo()
-    {
-        Log.i("Click Video","Click");
+    public void openVideo () {
+        Log.i("Click Video", "Click");
         dispatchTakeVideoIntent();
     }
 
 
-    private void dispatchTakePictureIntent() {
+    private void dispatchTakePictureIntent () {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -297,35 +290,77 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         Uri imageUri = FileProvider.getUriForFile(this.getBaseContext(),
                 getPackageName() + ".provider",
                 photoFile);
-        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,imageUri);
-        startActivityForResult(takePictureIntent,REQUEST_IMAGE_CAPTURE);
+        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
 
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult ( int requestCode, int resultCode, @Nullable Intent data){
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap image = null;
             try {
-                image = MediaStore.Images.Media.getBitmap(getContentResolver(),Uri.parse(currentPhotoPath));
+                image = MediaStore.Images.Media.getBitmap(getContentResolver(), Uri.parse(currentPhotoPath));
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            MediaStore.Images.Media.insertImage(getContentResolver(),image, String.valueOf(System.currentTimeMillis()),"NickSeven");
+            String name = String.valueOf(System.currentTimeMillis());
+            MediaStore.Images.Media.insertImage(getContentResolver(), image, name, "NickSeven");
+            String[] split = currentPhotoPath.split("/");
+            String file = "/" + split[1] + "/" + split[2] + "/" + split[3] + "/" + split[4] + "/" + name + ".jpg";
+            try {
+                ExifInterface exif = new ExifInterface(file);
+                Calendar c = Calendar.getInstance();
+                SimpleDateFormat df = new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+                String time = df.format(c.getTime());
+                exif.setAttribute(ExifInterface.TAG_DATETIME, time);
+                exif.saveAttributes();
+                LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                LocationListener ll = new LocationListener() {
+                    @Override
+                    public void onLocationChanged(@NonNull Location location) {
+
+                    }
+                };
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    return;
+                }
+                lm.requestLocationUpdates("gps", 2000, 10, ll);
+                Location location = lm.getLastKnownLocation("gps");
+                double longitude = 0;
+                double latitude = 0;
+                if (location != null) {
+                    longitude = location.getLongitude();
+                    latitude = location.getLatitude();
+                }
+                exif.setLatLong(latitude, longitude);
+                exif.saveAttributes();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            photosFragment.newPicOrVideo(action_View);
         }
         photosFragment.newPicOrVideo(action_View);
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    private void dispatchTakeVideoIntent() {
+    private void dispatchTakeVideoIntent () {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
 
-    private File createImageFile() throws IOException {
+    private File createImageFile () throws IOException {
         // Create an image file name
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -342,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         return image;
     }
 
-    private void createFile() {
+    private void createFile () {
         File Folder = new File(ImageGrallery.getDirMyFile());
         Log.i("MainActivity", Folder.getPath());
 
@@ -352,13 +387,13 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
             ImageGrallery.galleryAddPic(Folder.getPath(), this);
             File mediaFile = new File(ImageGrallery.getDirLike());
             mediaFile.mkdir();
-            Log.i("MainActivity",mediaFile.getPath());
+            Log.i("MainActivity", mediaFile.getPath());
 
         }
     }
 
 
-    private void createHiddenDir()
+    private void createHiddenDir ()
     {
         File Folder = new File(ImageGrallery.getDirMyFile());
         Log.i("MainActivity", Folder.getPath());
@@ -371,20 +406,20 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         File mediaFile = new File(ImageGrallery.getDirHidden());
 
         if (mediaFile.mkdir())
-            Log.i("MainActivity",mediaFile.getPath());
+            Log.i("MainActivity", mediaFile.getPath());
 
-        if (mediaFile.exists())
-        {
+        if (mediaFile.exists()) {
             Log.i("MainActivity", "Success!");
         }
     }
 
 
     @Override
-    public void onClickOke() {
+    public void onClickOke () {
         loadModeView();
         photosFragment.newPicOrVideo(action_View);
         loadFragment(photosFragment);
     }
+
 
 }

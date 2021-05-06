@@ -320,7 +320,6 @@ public class EditActivity extends AppCompatActivity implements
 
         ExifInterface exif= new ExifInterface(path);
         PhotoDetail result= new PhotoDetail();
-
         result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME));
         String[] split=path.split("/");
         result.setName(split[split.length-1]);
@@ -332,7 +331,7 @@ public class EditActivity extends AppCompatActivity implements
 
         double[] LatLong = exif.getLatLong();
 
-        if(LatLong==null)
+        if(LatLong[0]==0&&LatLong[1]==0)
             result.setLocation("Không có vị trí");
         else {
             addresses = geocoder.getFromLocation(LatLong[0],LatLong[1],1);

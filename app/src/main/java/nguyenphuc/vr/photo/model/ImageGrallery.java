@@ -9,8 +9,15 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 import java.io.File;
-import java.net.URI;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+
+import ly.img.android.events.$EventCall_ProgressState_PREVIEW_BUSY;
+import nguyenphuc.vr.photo.R;
 
 public class ImageGrallery {
 
@@ -18,6 +25,11 @@ public class ImageGrallery {
     public static String FILENAME_LIKE = "Like";
     public static String MyFile = "myDir";
     public static String NOMEDIA= ".nomedia";
+
+    public static String getDirHidden()
+    {
+        return Environment.getExternalStorageDirectory() + "/" + MyFile +"/" + ImageGrallery.NOMEDIA;
+    }
 
     public static String getDirMyFile()
     {
@@ -55,6 +67,7 @@ public class ImageGrallery {
         }
         return null;
     }
+
 
     public static ArrayList<String> getDir(Context context)
     {
@@ -229,6 +242,33 @@ public class ImageGrallery {
         return result;
     }
 
+    public static ArrayList<ItemView> getAlbumHidden(Context context)
+    {
+        ArrayList<ItemView> arrayList = new ArrayList<>();
+        File dir = new File(ImageGrallery.getDirHidden());
+        File[] list = dir.listFiles();
+
+        arrayList.add(new Album(context.getString(R.string.hidden),Type.TITLE));
+
+        ArrayList<Photo> photos = new ArrayList<>();
+        try
+        {
+            for (File file : list)
+            {
+                if (file != null)
+                    photos.add(new Photo(file.getPath()));
+            }
+
+        } catch (Exception e)
+        {
+
+        }
+
+        arrayList.add(new Photos(photos,Type.ALBUM));
+
+        return arrayList;
+    }
+
     public static ArrayList<ItemView> getAlbum(Context context)
     {
         Uri uri;
@@ -316,6 +356,7 @@ public class ImageGrallery {
                 Log.i("ImageGra Duration", Long.toString(cursor.getLong(column_index_duration)));
                 Log.i("ImageGra DisplayName", cursor.getString(column_index_displayName));
                 Log.i("ImageGra MimeType", Integer.toString(media_type));
+                Log.i("ImageGra Path",path);
 
                 newTime.setDuration(time);
 
@@ -372,5 +413,18 @@ public class ImageGrallery {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         context.sendBroadcast(mediaScanIntent);
+    }
+
+    public static void copy(File src, File dst) throws IOException {
+        try (InputStream in = new FileInputStream(src)) {
+            try (OutputStream out = new FileOutputStream(dst)) {
+                // Transfer bytes from in to out
+                byte[] buf = new byte[1024];
+                int len;
+                while ((len = in.read(buf)) > 0) {
+                    out.write(buf, 0, len);
+                }
+            }
+        }
     }
 }

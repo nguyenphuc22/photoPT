@@ -1,8 +1,11 @@
 package nguyenphuc.vr.photo;
 
+import android.annotation.SuppressLint;
 import android.app.WallpaperManager;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
@@ -16,12 +19,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -31,7 +36,10 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -53,13 +61,17 @@ import ly.img.android.pesdk.ui.model.state.UiConfigSticker;
 import ly.img.android.pesdk.ui.model.state.UiConfigText;
 import nguyenphuc.vr.photo.dialog.Copy_Dialog;
 import nguyenphuc.vr.photo.dialog.InFo_Dialog;
+import nguyenphuc.vr.photo.dialog.NewPassword_Dialog;
+import nguyenphuc.vr.photo.dialog.Password_Dialog;
 import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.Photo;
 import nguyenphuc.vr.photo.model.PhotoDetail;
 import nguyenphuc.vr.photo.model.Settings;
 import nguyenphuc.vr.photo.model.VideoViewUtils;
 
-public class EditActivity extends AppCompatActivity {
+public class EditActivity extends AppCompatActivity implements
+        NewPassword_Dialog.NewPassword_DialogListener ,
+        Password_Dialog.Password_DialogListenerActionHidden {
     public static int PESDK_RESULT = 1;
 
     private Toolbar toolbar;
@@ -148,6 +160,7 @@ public class EditActivity extends AppCompatActivity {
         return super.onPrepareOptionsMenu(menu);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId())
@@ -159,8 +172,6 @@ public class EditActivity extends AppCompatActivity {
                     if (mPhoto.isImage())
                     {
                         openEditor(Uri.fromFile(new File(mPhoto.getPath())));
-                    } else {
-
                     }
                 }
                 break;
@@ -216,6 +227,29 @@ public class EditActivity extends AppCompatActivity {
             {
                 DeletePhoto(mPhoto.getPath());
                 break;
+            }
+            case R.id.item_hidden:
+            {
+                SharedPreferences sharedPref = getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+                String password_HiddenDir = sharedPref.getString(Settings.PASSWORD_HIDDENDIR,Settings.PASS_NULL);
+
+                Log.i("EditActivity",password_HiddenDir);
+                if (password_HiddenDir.contains(Settings.PASS_NULL))
+                {
+                    // show dialog input new pass word
+                    NewPassword_Dialog newPassword_dialog = new NewPassword_Dialog(this,sharedPref,mPhoto,Settings.ACTION_HIDDEN);
+                    newPassword_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.newpassword));
+
+                } else {
+                    // show dialog input pass word
+                    Password_Dialog password_dialog = new Password_Dialog(password_HiddenDir,mPhoto,this,Settings.ACTION_HIDDEN);
+                    password_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.password));
+                }
+
+
+
             }
         }
 
@@ -320,10 +354,10 @@ public class EditActivity extends AppCompatActivity {
     public void DeletePhoto(String path)  {
         ContentResolver contentResolver = getContentResolver();
         contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
+                MediaStore.Images.ImageColumns.DATA + "= ?" , new String[]{ path });
 
         contentResolver.delete(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-                MediaStore.Images.ImageColumns.DATA + "=?" , new String[]{ path });
+                MediaStore.Images.ImageColumns.DATA + "= ?" , new String[]{ path });
         finish();
     }
 
@@ -378,4 +412,13 @@ public class EditActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onClickOke_Copy(String path) {
+        DeletePhoto(path);
+    }
+
+    @Override
+    public void onClickOke(String path) {
+        DeletePhoto(path);
+    }
 }

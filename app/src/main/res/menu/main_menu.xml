@@ -29,4 +29,16 @@
         android:title="@string/slide"
         app:showAsAction="never"
         />
+
+    <item
+        android:id="@+id/item_HiddenMode"
+        android:title="@string/hiddenMode"
+        app:showAsAction="never"
+        />
+
+    <item
+        android:id="@+id/item_PublicMode"
+        android:title="@string/publicMode"
+        app:showAsAction="never"
+        />
 </menu>

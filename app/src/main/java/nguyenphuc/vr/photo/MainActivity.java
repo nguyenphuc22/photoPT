@@ -10,6 +10,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,6 +24,9 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,12 +35,14 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import nguyenphuc.vr.photo.dialog.NewPassword_Dialog;
+import nguyenphuc.vr.photo.dialog.Password_Dialog;
 import nguyenphuc.vr.photo.fragment.AlbumsFragment;
 import nguyenphuc.vr.photo.fragment.PhotosFragment;
 import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.Settings;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Password_Dialog.Password_DialogListener {
 
     private static final int WRITE_PERMISSION_CODE = 202;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -50,10 +57,12 @@ public class MainActivity extends AppCompatActivity {
 
     private String currentPhotoPath;
     private String mode_Theme;
+    private String action_View;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
@@ -64,28 +73,39 @@ public class MainActivity extends AppCompatActivity {
         }
 
         loadTheme();
-
+        loadModeView();
         createFile();
-
+        createHiddenDir();
         init();
+
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         settingToolBar(actionBar);
         actionBar.setTitle(R.string.Image);
-        photosFragment = new PhotosFragment();
+        photosFragment = new PhotosFragment(action_View);
         loadFragment(photosFragment);
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        photosFragment.newPicOrVideo();
+        loadModeView();
+        photosFragment.newPicOrVideo(action_View);
+    }
+
+    private void loadModeView()
+    {
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        this.action_View = sharedPref.getString(Settings.ACTION_VIEW, Settings.ACTION_VIEW_PUBLIC);
     }
 
     private void loadTheme() {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
         this.mode_Theme = sharedPref.getString(Settings.THEME, Settings.DARK_THEME);
+
         if (this.mode_Theme.equals(Settings.DARK_THEME))
         {
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
@@ -94,10 +114,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private BottomNavigationView.OnNavigationItemSelectedListener
+    private final BottomNavigationView.OnNavigationItemSelectedListener
             mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
+        @SuppressLint("NonConstantResourceId")
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             Fragment fragment;
@@ -105,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.item_Image:
                 {
                     actionBar.setTitle(R.string.Image);
-                    fragment = new PhotosFragment();
+                    fragment = new PhotosFragment(action_View);
                     loadFragment(fragment);
                     return true;
                 }
@@ -121,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId())
@@ -146,8 +168,47 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             }
+            case R.id.item_HiddenMode:
+            {
+                SharedPreferences sharedPref = getSharedPreferences(
+                        getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                String password_HiddenDir = sharedPref.getString(Settings.PASSWORD_HIDDENDIR,Settings.PASS_NULL);
+                Log.i("EditActivity",password_HiddenDir);
+                if (password_HiddenDir.contains(Settings.PASS_NULL))
+                {
+                    // show dialog input new pass word
+                    NewPassword_Dialog newPassword_dialog = new NewPassword_Dialog(this,sharedPref,Settings.ACTION_HIDDEN_MODE);
+                    newPassword_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.newpassword));
+
+                } else {
+                    // show dialog input pass word
+                    Password_Dialog password_dialog = new Password_Dialog(password_HiddenDir,this,Settings.ACTION_HIDDEN_MODE);
+                    password_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.password));
+                }
+            }
+            case R.id.item_PublicMode:
+            {
+                loadModeView();
+                changeModeViewPublic();
+                photosFragment.newPicOrVideo(action_View);
+                loadFragment(photosFragment);
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void changeModeViewPublic() {
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        action_View = Settings.ACTION_VIEW_PUBLIC;
+        editor.putString(Settings.ACTION_VIEW, Settings.ACTION_VIEW_PUBLIC);
+        editor.apply();
+        if (!editor.commit())
+        {
+            Log.i("MainActivity","Fail");
+        }
     }
 
     private void changeTheme() {
@@ -168,6 +229,21 @@ public class MainActivity extends AppCompatActivity {
             editor.apply();
             this.mode_Theme = Settings.LIGHT_THEME;
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem item_PublicMode = menu.findItem(R.id.item_PublicMode);
+        MenuItem item_HiddenMode= menu.findItem(R.id.item_HiddenMode);
+        if (action_View.equals(Settings.ACTION_VIEW_PUBLIC))
+        {
+            item_HiddenMode.setVisible(true);
+            item_PublicMode.setVisible(false);
+        } else {
+            item_HiddenMode.setVisible(false);
+            item_PublicMode.setVisible(true);
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -238,9 +314,10 @@ public class MainActivity extends AppCompatActivity {
             }
             MediaStore.Images.Media.insertImage(getContentResolver(),image, String.valueOf(System.currentTimeMillis()),"NickSeven");
         }
-        photosFragment.newPicOrVideo();
+        photosFragment.newPicOrVideo(action_View);
     }
 
+    @SuppressLint("QueryPermissionsNeeded")
     private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
@@ -250,7 +327,7 @@ public class MainActivity extends AppCompatActivity {
 
     private File createImageFile() throws IOException {
         // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
@@ -281,5 +358,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    private void createHiddenDir()
+    {
+        File Folder = new File(ImageGrallery.getDirMyFile());
+        Log.i("MainActivity", Folder.getPath());
+
+        if (Folder.mkdir())
+            return;
+        if (!Folder.exists())
+            return;
+
+        File mediaFile = new File(ImageGrallery.getDirHidden());
+
+        if (mediaFile.mkdir())
+            Log.i("MainActivity",mediaFile.getPath());
+
+        if (mediaFile.exists())
+        {
+            Log.i("MainActivity", "Success!");
+        }
+    }
+
+
+    @Override
+    public void onClickOke() {
+        loadModeView();
+        photosFragment.newPicOrVideo(action_View);
+        loadFragment(photosFragment);
+    }
 
 }

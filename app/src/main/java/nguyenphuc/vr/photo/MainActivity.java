@@ -167,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
             }
             case R.id.item_slide: {
                 Intent intent = new Intent(this, SlideActivity.class);
+                intent.setAction(action_View);
                 startActivity(intent);
                 break;
             }

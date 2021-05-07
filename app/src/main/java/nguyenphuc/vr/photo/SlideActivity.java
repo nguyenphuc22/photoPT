@@ -2,6 +2,7 @@ package nguyenphuc.vr.photo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -18,6 +19,7 @@ import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.ItemView;
 import nguyenphuc.vr.photo.model.Photo;
 import nguyenphuc.vr.photo.model.Photos;
+import nguyenphuc.vr.photo.model.Settings;
 import nguyenphuc.vr.photo.model.Type;
 import nguyenphuc.vr.photo.task.SlideAsyncTask;
 
@@ -31,7 +33,15 @@ public class SlideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_slide);
 
-        dataImage = ImageGrallery.getAlbum(this);
+        Intent intent = getIntent();
+
+        if (intent.getAction().equals(Settings.ACTION_VIEW_PUBLIC))
+        {
+            dataImage = ImageGrallery.getAlbum(this);
+        } else {
+            dataImage = ImageGrallery.getAlbumHidden(this);
+        }
+
 
         slideAsyncTask = new SlideAsyncTask(this);
 

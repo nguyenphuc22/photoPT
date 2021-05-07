@@ -51,7 +51,8 @@ public class SlideAsyncTask extends AsyncTask<ArrayList<ItemView>, Photo, Void> 
         super.onPreExecute();
         //Hàm này sẽ chạy đầu tiên khi AsyncTask này được gọi
         //Ở đây mình sẽ thông báo quá trình load bắt đâu "Start"
-        Toast.makeText(contextParent, R.string.Start, Toast.LENGTH_SHORT).show();
+        if (!contextParent.isDestroyed())
+            Toast.makeText(contextParent, R.string.Finished, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -77,6 +78,7 @@ public class SlideAsyncTask extends AsyncTask<ArrayList<ItemView>, Photo, Void> 
         super.onPostExecute(aVoid);
         //Hàm này được thực hiện khi tiến trình kết thúc
         //Ở đây mình thông báo là đã "Finshed" để người dùng biết
-        Toast.makeText(contextParent, R.string.Finished, Toast.LENGTH_SHORT).show();
+        if (!contextParent.isDestroyed())
+            Toast.makeText(contextParent, R.string.Finished, Toast.LENGTH_SHORT).show();
     }
 }

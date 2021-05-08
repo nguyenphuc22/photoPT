@@ -253,6 +253,7 @@ public class EditActivity extends AppCompatActivity implements
             }
         }
 
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -326,14 +327,15 @@ public class EditActivity extends AppCompatActivity implements
         result.setPath(path);
         result.setPixel(exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)+"x"+exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
 
-        Geocoder geocoder=new Geocoder(this, Locale.getDefault());
-        List<Address> addresses;
 
-        double[] LatLong = exif.getLatLong();
+        double[] LatLong  = exif.getLatLong();
 
-        if(LatLong[0]==0&&LatLong[1]==0)
+
+        if(LatLong==null)
             result.setLocation("Không có vị trí");
         else {
+            Geocoder geocoder=new Geocoder(this, Locale.getDefault());
+            List<Address> addresses;
             addresses = geocoder.getFromLocation(LatLong[0],LatLong[1],1);
             result.setLocation(addresses.get(0).getAddressLine(0) + addresses.get(0).getLocality());
         }

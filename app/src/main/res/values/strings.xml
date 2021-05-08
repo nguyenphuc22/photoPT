@@ -33,11 +33,11 @@
     <string name="location">Địa điểm</string>
     <string name="copy">Sao chép</string>
     <string name="selectPath">Chọn đường dẫn</string>
-    <string name="cancel">Tắt</string>
+    <string name="cancel" translatable="false">Tắt</string>
     <string name="fail">Thất bại</string>
     <string name="like">Thích ảnh</string>
     <string name="unlike">Bỏ Thích</string>
-    <string name="hiddenMode">chế độ ẩn</string>
+    <string name="hiddenMode">Chế độ ẩn</string>
     <string name="hidden">Ẩn</string>
     <string name="inputPassword">Nhập mật khẩu</string>
     <string name="inputPasswordAgain">Nhập lại mật khẩu</string>
@@ -46,6 +46,7 @@
     <string name="password">Mật khẩu</string>
     <string name="errorNotTrue">Mật khẩu không đúng</string>
     <string name="publicMode">Xem tất cả</string>
-    <string name="picture">Pictures</string>
+    <string name="Locatenoti">Không có vị trí</string>
+
 
 </resources>

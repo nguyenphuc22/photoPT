@@ -15,7 +15,7 @@
     <string name="DefaultImage">Set Background</string>
     <string name="Finished">End Show</string>
     <string name="Start">Start</string>
-    <string name="info">Detail</string>
+    <string name="info">Info</string>
     <string name="date">Time</string>
     <string name="size">Size</string>
     <string name="pixel">Pixel</string>
@@ -37,5 +37,5 @@
     <string name="password">PassWord</string>
     <string name="errorNotTrue">Wrong PassWord</string>
     <string name="publicMode">See all</string>
-    <string name="picture">Ảnh</string>
+    <string name="Locatenoti">Not Available</string>
 </resources>

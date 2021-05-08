@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -321,12 +322,20 @@ public class EditActivity extends AppCompatActivity implements
 
         ExifInterface exif= new ExifInterface(path);
         PhotoDetail result= new PhotoDetail();
-        result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME));
+
         String[] split=path.split("/");
         result.setName(split[split.length-1]);
         result.setPath(path);
-
-        result.setPixel(exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)+"x"+exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
+        if(path.contains(".mp4")){
+            MediaMetadataRetriever retriever=new MediaMetadataRetriever();
+            retriever.setDataSource(path);
+            result.setDate((retriever.extractMetadata(5)));
+            result.setPixel(retriever.extractMetadata(19)+"x"+retriever.extractMetadata(18));
+        }
+        else {
+            result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME));
+            result.setPixel(exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH) + "x" + exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
+        }
 
 
         double[] LatLong  = exif.getLatLong();

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">photo</string>
+    <string name="ok">Agree</string>
+    <string name="Image">Image</string>
+    <string name="Album">Album</string>
+    <string name="Edit">Edit</string>
+    <string name="InFor">Detail</string>
+    <string name="Delete">Delete</string>
+    <string name="Share">Share</string>
+    <string name="TakePhoto">Camera</string>
+    <string name="Recording">Record</string>
+    <string name="ChangeTheme">Change Theme</string>
+    <string name="slide">Slides Show</string>
+    <string name="DefaultImage">Set Background</string>
+    <string name="Finished">End Show</string>
+    <string name="Start">Start</string>
+    <string name="info">Detail</string>
+    <string name="date">Time</string>
+    <string name="size">Size</string>
+    <string name="pixel">Pixel</string>
+    <string name="path">Path</string>
+    <string name="name">Name</string>
+    <string name="location">Location</string>
+    <string name="copy">Copy</string>
+    <string name="selectPath">Choose Path</string>
+    <string name="cancel">Cancel</string>
+    <string name="fail">Fail</string>
+    <string name="like">Like</string>
+    <string name="unlike">Unlike</string>
+    <string name="hiddenMode">Hidden Mode</string>
+    <string name="hidden">Hide</string>
+    <string name="inputPassword">Enter PassWord</string>
+    <string name="inputPasswordAgain">Re-enter PassWord</string>
+    <string name="newpassword">NewPassWord</string>
+    <string name="errorNotSame">Not Math</string>
+    <string name="password">PassWord</string>
+    <string name="errorNotTrue">Wrong PassWord</string>
+    <string name="publicMode">See all</string>
+    <string name="picture">Ảnh</string>
+</resources>

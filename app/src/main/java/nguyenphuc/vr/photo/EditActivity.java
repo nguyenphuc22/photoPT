@@ -325,6 +325,7 @@ public class EditActivity extends AppCompatActivity implements
         String[] split=path.split("/");
         result.setName(split[split.length-1]);
         result.setPath(path);
+
         result.setPixel(exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH)+"x"+exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
 
 

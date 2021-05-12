@@ -331,24 +331,31 @@ public class EditActivity extends AppCompatActivity implements
             retriever.setDataSource(path);
             result.setDate((retriever.extractMetadata(5)));
             result.setPixel(retriever.extractMetadata(19)+"x"+retriever.extractMetadata(18));
+
         }
         else {
             result.setDate(exif.getAttribute(ExifInterface.TAG_DATETIME));
             result.setPixel(exif.getAttribute(ExifInterface.TAG_IMAGE_WIDTH) + "x" + exif.getAttribute(ExifInterface.TAG_IMAGE_LENGTH));
+            double[] LatLong  = exif.getLatLong();
+
+
+            if(LatLong==null||(LatLong[0]==0&&LatLong[1]==0))
+                result.setLocation("Không có vị trí");
+            else {
+                try {
+                    Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+                    List<Address> addresses=null;
+                    addresses = geocoder.getFromLocation(LatLong[0], LatLong[1], 1);
+                    result.setLocation(addresses.get(0).getAddressLine(0) + addresses.get(0).getLocality());
+                }
+                catch(IOException e){
+                    result.setLocation("Không có vị trí");
+                    e.printStackTrace();}
+            }
         }
 
 
-        double[] LatLong  = exif.getLatLong();
 
-
-        if(LatLong==null)
-            result.setLocation("Không có vị trí");
-        else {
-            Geocoder geocoder=new Geocoder(this, Locale.getDefault());
-            List<Address> addresses;
-            addresses = geocoder.getFromLocation(LatLong[0],LatLong[1],1);
-            result.setLocation(addresses.get(0).getAddressLine(0) + addresses.get(0).getLocality());
-        }
         File file=new File(path);
         long size_File= file.length();
         if(size_File < PhotoDetail.MB ) {
@@ -364,9 +371,10 @@ public class EditActivity extends AppCompatActivity implements
 
     public void DeletePhoto(String path)  {
         ContentResolver contentResolver = getContentResolver();
+        if(path.contains(".mp4"))
         contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.ImageColumns.DATA + "= ?" , new String[]{ path });
-
+        else
         contentResolver.delete(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.ImageColumns.DATA + "= ?" , new String[]{ path });
         finish();

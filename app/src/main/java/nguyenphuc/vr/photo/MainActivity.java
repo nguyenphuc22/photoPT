@@ -334,16 +334,19 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                lm.requestLocationUpdates("gps", 2000, 10, ll);
-                Location location = lm.getLastKnownLocation("gps");
-                double longitude = 0;
-                double latitude = 0;
-                if (location != null) {
-                    longitude = location.getLongitude();
-                    latitude = location.getLatitude();
+                try {
+                    lm.requestLocationUpdates("gps", 2000, 10, ll);
+                    Location location = lm.getLastKnownLocation("gps");
+                    double longitude = 0;
+                    double latitude = 0;
+                    if (location != null) {
+                        longitude = location.getLongitude();
+                        latitude = location.getLatitude();
+                    }
+                    exif.setLatLong(latitude, longitude);
+                    exif.saveAttributes();
                 }
-                exif.setLatLong(latitude, longitude);
-                exif.saveAttributes();
+                catch(IOException e){e.printStackTrace();}
 
             } catch (IOException e) {
                 e.printStackTrace();

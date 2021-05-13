@@ -1,5 +1,7 @@
 package nguyenphuc.vr.photo.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,7 @@ import nguyenphuc.vr.photo.R;
 import nguyenphuc.vr.photo.adapter.AdapterPhotos;
 import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.ItemView;
+import nguyenphuc.vr.photo.model.Settings;
 
 public class AlbumsFragment extends Fragment {
 
@@ -48,11 +51,22 @@ public class AlbumsFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        adapterAlbums = new AdapterPhotos(albums,getActivity());
+        adapterAlbums = new AdapterPhotos(albums,getActivity(),loadLine());
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapterAlbums);
 
+    }
+
+    private int loadLine()
+    {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        int line;
+        line = sharedPref.getInt(Settings.LINE, Settings.LINE_DEFAULT);
+
+        return line;
     }
 
     @Override
@@ -61,7 +75,7 @@ public class AlbumsFragment extends Fragment {
         albums = ImageGrallery.getAllAlbum(getActivity());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        adapterAlbums = new AdapterPhotos(albums,getActivity());
+        adapterAlbums = new AdapterPhotos(albums,getActivity(),loadLine());
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapterAlbums);

@@ -47,6 +47,7 @@
     <string name="errorNotTrue">Mật khẩu không đúng</string>
     <string name="publicMode">Xem tất cả</string>
     <string name="Locatenoti">Không có vị trí</string>
+    <string name="column">hàng</string>
 
 
 </resources>

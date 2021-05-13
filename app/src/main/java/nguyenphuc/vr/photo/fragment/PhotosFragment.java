@@ -1,5 +1,7 @@
 package nguyenphuc.vr.photo.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -70,7 +72,7 @@ public class PhotosFragment extends Fragment {
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
 
-        adapterPhotos = new AdapterPhotos(dataImage,getActivity());
+        adapterPhotos = new AdapterPhotos(dataImage,getActivity(),loadLine());
         recyclerView.setHasFixedSize(false);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.setAdapter(adapterPhotos);
@@ -87,12 +89,12 @@ public class PhotosFragment extends Fragment {
         if (action_View.equals(Settings.ACTION_VIEW_HIDDEN))
         {
             dataImage = ImageGrallery.getAlbumHidden(getActivity());
-            adapterPhotos = new AdapterPhotos(dataImage,getActivity());
+            adapterPhotos = new AdapterPhotos(dataImage,getActivity(),loadLine());
             recyclerView.setAdapter(adapterPhotos);
             adapterPhotos.notifyDataSetChanged();
         } else {
             dataImage = ImageGrallery.getAlbum(getActivity());
-            adapterPhotos = new AdapterPhotos(dataImage,getActivity());
+            adapterPhotos = new AdapterPhotos(dataImage,getActivity(),loadLine());
             recyclerView.setAdapter(adapterPhotos);
             adapterPhotos.notifyDataSetChanged();
         }
@@ -101,6 +103,15 @@ public class PhotosFragment extends Fragment {
 
     }
 
+    private int loadLine()
+    {
+        SharedPreferences sharedPref = getContext().getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
+        int line;
+        line = sharedPref.getInt(Settings.LINE, Settings.LINE_DEFAULT);
+
+        return line;
+    }
 
 }

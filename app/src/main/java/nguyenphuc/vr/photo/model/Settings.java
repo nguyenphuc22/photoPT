@@ -7,6 +7,8 @@ public class Settings {
     public static final String ACTION_VIEW = "ACTION_VIEW";
     public static final String ACTION_HIDDEN_MODE = "ACTION_HIDDEN_MODE";
     public static final String ACTION_VIEW_DATA = "DATA";
+    public static final String LINE = "LINE";
+    public static final int LINE_DEFAULT = 4;
     public static String ACTION_HIDDEN = "ACTION_HIDDEN";
     public static String PASS_NULL = "NULL";
     public static String PASSWORD_HIDDENDIR = "PASSWORD_HIDDENDIR";

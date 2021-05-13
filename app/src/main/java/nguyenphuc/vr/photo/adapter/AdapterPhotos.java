@@ -24,16 +24,19 @@ public class AdapterPhotos extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     ArrayList<ItemView> mArrayList;
     Context mContext;
     private AdapterView.OnItemClickListener mOnItemClickListener;
+    int line;
 
-    public AdapterPhotos(ArrayList<ItemView> mArrayList, Context mContext, AdapterView.OnItemClickListener mOnItemClickListener) {
+    public AdapterPhotos(ArrayList<ItemView> mArrayList, Context mContext, AdapterView.OnItemClickListener mOnItemClickListener, int line) {
         this.mArrayList = mArrayList;
         this.mContext = mContext;
         this.mOnItemClickListener = mOnItemClickListener;
+        this.line = line;
     }
 
-    public AdapterPhotos(ArrayList<ItemView> mArrayList, Context mContext) {
+    public AdapterPhotos(ArrayList<ItemView> mArrayList, Context mContext, int line) {
         this.mArrayList = mArrayList;
         this.mContext = mContext;
+        this.line = line;
     }
 
 
@@ -59,7 +62,7 @@ public class AdapterPhotos extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         {
             AlbumViewHolder albumViewHolder = (AlbumViewHolder) holder;
             Photos mPhotos = (Photos) this.mArrayList.get(position);
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this.mContext,4);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this.mContext,line);
             AdapterPhoto adapterPhoto = new AdapterPhoto(this.mContext, mPhotos.getAlbum());
             albumViewHolder.recyclerView.setLayoutManager(gridLayoutManager);
             albumViewHolder.recyclerView.setAdapter(adapterPhoto);

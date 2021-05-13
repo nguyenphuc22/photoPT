@@ -39,9 +39,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import nguyenphuc.vr.photo.dialog.ChangLayout_Dialog;
 import nguyenphuc.vr.photo.dialog.NewPassword_Dialog;
 import nguyenphuc.vr.photo.dialog.Password_Dialog;
 import nguyenphuc.vr.photo.fragment.AlbumsFragment;
@@ -49,7 +51,9 @@ import nguyenphuc.vr.photo.fragment.PhotosFragment;
 import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.Settings;
 
-public class MainActivity extends AppCompatActivity implements Password_Dialog.Password_DialogListener {
+public class MainActivity extends AppCompatActivity implements
+        Password_Dialog.Password_DialogListener,
+        ChangLayout_Dialog.ChangLayout_DialogListener {
 
     private static final int WRITE_PERMISSION_CODE = 202;
     private static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -123,6 +127,17 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         }
     }
 
+    private int loadLine()
+    {
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+
+        int line;
+        line = sharedPref.getInt(Settings.LINE, Settings.LINE_DEFAULT);
+
+        return line;
+    }
+
     private final BottomNavigationView.OnNavigationItemSelectedListener
             mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -193,8 +208,22 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
                 photosFragment.newPicOrVideo(action_View);
                 loadFragment(photosFragment);
             }
+            case R.id.item_ChangLine: {
+                int now = loadLine();
+                ArrayList<Integer> lines = loadLines();
+                ChangLayout_Dialog changLayout_dialog = new ChangLayout_Dialog(now,lines,this);
+                changLayout_dialog.show(getSupportFragmentManager(),String.valueOf(R.string.column));
+            }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private ArrayList<Integer> loadLines() {
+        ArrayList<Integer> arrayList = new ArrayList<>();
+        arrayList.add(4);
+        arrayList.add(5);
+        arrayList.add(7);
+        return arrayList;
     }
 
     private void changeModeViewPublic () {
@@ -425,5 +454,22 @@ public class MainActivity extends AppCompatActivity implements Password_Dialog.P
         loadFragment(photosFragment);
     }
 
+    private void changeColumn(int line)
+    {
+        SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
 
+        editor.putInt(Settings.LINE, line);
+        editor.apply();
+
+
+    }
+
+    @Override
+    public void onClickOke(int line) {
+        changeColumn(line);
+        photosFragment.newPicOrVideo(action_View);
+        loadFragment(photosFragment);
+    }
 }

@@ -99,6 +99,11 @@ public class Copy_Dialog extends DialogFragment {
         return builder.create();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
     public static void copy(File src, File dst) throws IOException {
         try (InputStream in = new FileInputStream(src)) {
             try (OutputStream out = new FileOutputStream(dst)) {

@@ -38,4 +38,6 @@
     <string name="errorNotTrue">Wrong PassWord</string>
     <string name="publicMode">See all</string>
     <string name="Locatenoti">Not Available</string>
+    <string name="photo">Photo</string>
+    <string name="column">column</string>
 </resources>

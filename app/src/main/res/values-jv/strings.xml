@@ -36,4 +36,7 @@
     <string name="password">パスワード</string>
     <string name="errorNotTrue">間違ったパスワード</string>
     <string name="publicMode">すべてを見る</string>
+    <string name="photo">画像</string>
+    <string name="Locatenoti">利用不可</string>
+    <string name="column">カラム</string>
 </resources>

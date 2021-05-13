@@ -1,19 +1,7 @@
 package nguyenphuc.vr.photo;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.FileProvider;
-import androidx.exifinterface.media.ExifInterface;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,9 +18,17 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
+import androidx.exifinterface.media.ExifInterface;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -51,6 +47,8 @@ import nguyenphuc.vr.photo.fragment.PhotosFragment;
 import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.Settings;
 
+
+@SuppressLint("MissingPermission")
 public class MainActivity extends AppCompatActivity implements
         Password_Dialog.Password_DialogListener,
         ChangLayout_Dialog.ChangLayout_DialogListener {
@@ -96,6 +94,8 @@ public class MainActivity extends AppCompatActivity implements
         actionBar.setTitle(R.string.Image);
         photosFragment = new PhotosFragment(action_View);
         loadFragment(photosFragment);
+
+        requestLocationUpdate();
     }
 
     @Override
@@ -103,6 +103,7 @@ public class MainActivity extends AppCompatActivity implements
         super.onResume();
         loadModeView();
         photosFragment.newPicOrVideo(action_View);
+        requestLocationUpdate();
     }
 
     private void loadModeView() {
@@ -127,8 +128,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private int loadLine()
-    {
+    private int loadLine() {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @SuppressLint("NonConstantResourceId")
     @Override
-    public boolean onOptionsItemSelected (@NonNull MenuItem item){
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_TakePhoto: {
                 openCamera();
@@ -211,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.item_ChangLine: {
                 int now = loadLine();
                 ArrayList<Integer> lines = loadLines();
-                ChangLayout_Dialog changLayout_dialog = new ChangLayout_Dialog(now,lines,this);
-                changLayout_dialog.show(getSupportFragmentManager(),String.valueOf(R.string.column));
+                ChangLayout_Dialog changLayout_dialog = new ChangLayout_Dialog(now, lines, this);
+                changLayout_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.column));
             }
         }
         return super.onOptionsItemSelected(item);
@@ -226,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements
         return arrayList;
     }
 
-    private void changeModeViewPublic () {
+    private void changeModeViewPublic() {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
@@ -239,7 +239,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    private void changeTheme () {
+    private void changeTheme() {
 
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
@@ -259,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onPrepareOptionsMenu (Menu menu){
+    public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem item_PublicMode = menu.findItem(R.id.item_PublicMode);
         MenuItem item_HiddenMode = menu.findItem(R.id.item_HiddenMode);
         if (action_View.equals(Settings.ACTION_VIEW_PUBLIC)) {
@@ -273,22 +273,22 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onCreateOptionsMenu (Menu menu){
+    public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
-    private void init () {
+    private void init() {
         actionBar = findViewById(R.id.toolbar);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
     }
 
-    private void settingToolBar (Toolbar toolbar){
+    private void settingToolBar(Toolbar toolbar) {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
 
-    private void loadFragment (Fragment fragment){
+    private void loadFragment(Fragment fragment) {
         // load fragment
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
@@ -296,18 +296,18 @@ public class MainActivity extends AppCompatActivity implements
         transaction.commit();
     }
 
-    public void openCamera () {
+    public void openCamera() {
         Log.i("CLick Camera", "Click");
         dispatchTakePictureIntent();
     }
 
-    public void openVideo () {
+    public void openVideo() {
         Log.i("Click Video", "Click");
         dispatchTakeVideoIntent();
     }
 
 
-    private void dispatchTakePictureIntent () {
+    private void dispatchTakePictureIntent() {
 
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -326,7 +326,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    protected void onActivityResult ( int requestCode, int resultCode, @Nullable Intent data){
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bitmap image = null;
@@ -374,8 +374,9 @@ public class MainActivity extends AppCompatActivity implements
                     }
                     exif.setLatLong(latitude, longitude);
                     exif.saveAttributes();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                catch(IOException e){e.printStackTrace();}
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -386,14 +387,14 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    private void dispatchTakeVideoIntent () {
+    private void dispatchTakeVideoIntent() {
         Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
         if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
         }
     }
 
-    private File createImageFile () throws IOException {
+    private File createImageFile() throws IOException {
         // Create an image file name
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
@@ -410,7 +411,7 @@ public class MainActivity extends AppCompatActivity implements
         return image;
     }
 
-    private void createFile () {
+    private void createFile() {
         File Folder = new File(ImageGrallery.getDirMyFile());
         Log.i("MainActivity", Folder.getPath());
 
@@ -426,8 +427,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
 
-    private void createHiddenDir ()
-    {
+    private void createHiddenDir() {
         File Folder = new File(ImageGrallery.getDirMyFile());
         Log.i("MainActivity", Folder.getPath());
 
@@ -448,14 +448,13 @@ public class MainActivity extends AppCompatActivity implements
 
 
     @Override
-    public void onClickOke () {
+    public void onClickOke() {
         loadModeView();
         photosFragment.newPicOrVideo(action_View);
         loadFragment(photosFragment);
     }
 
-    private void changeColumn(int line)
-    {
+    private void changeColumn(int line) {
         SharedPreferences sharedPref = getSharedPreferences(
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -471,5 +470,29 @@ public class MainActivity extends AppCompatActivity implements
         changeColumn(line);
         photosFragment.newPicOrVideo(action_View);
         loadFragment(photosFragment);
+    }
+
+    private void requestLocationUpdate()
+    {
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationListener ll = new LocationListener() {
+            @Override
+            public void onLocationChanged(@NonNull Location location) {
+
+            }
+        };
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+
+        }
+        lm.requestLocationUpdates("gps", 2000, 10, ll);
     }
 }

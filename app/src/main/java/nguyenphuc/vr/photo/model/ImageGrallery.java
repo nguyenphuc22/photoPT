@@ -109,7 +109,6 @@ public class ImageGrallery {
         Uri uri;
         Cursor cursor;
 
-
         int     column_index_data,
                 column_index_added,
                 column_index_size,
@@ -208,7 +207,7 @@ public class ImageGrallery {
                 if (!oldTime.getName().equals(newTime.getName())) {
 
                     if (!dataImage.isEmpty()) {
-                        result.add(new Album(oldTime.getName(), Type.TITLE));
+                        result.add(new Album(oldTime.getName() + "      " + dataImage.size() + "    " + context.getString(R.string.photo), Type.TITLE));
                         result.add(new Photos(dataImage, Type.ALBUM));
                     }
                     dataImage = new ArrayList<>();
@@ -236,7 +235,7 @@ public class ImageGrallery {
         }
         if (dataImage.size() != 0)
         {
-            result.add(new Album(oldTime.getName(), Type.TITLE));
+            result.add(new Album(oldTime.getName() + "      " + dataImage.size() + "    " + context.getString(R.string.photo) , Type.TITLE));
             result.add(new Photos(dataImage, Type.ALBUM));
         }
         return result;

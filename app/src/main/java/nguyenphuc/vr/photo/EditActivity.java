@@ -20,14 +20,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.MediaController;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
@@ -37,10 +35,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -371,10 +366,10 @@ public class EditActivity extends AppCompatActivity implements
 
     public void DeletePhoto(String path)  {
         ContentResolver contentResolver = getContentResolver();
-        if(path.contains(".mp4"))
+
         contentResolver.delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.ImageColumns.DATA + "= ?" , new String[]{ path });
-        else
+
         contentResolver.delete(MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 MediaStore.Images.ImageColumns.DATA + "= ?" , new String[]{ path });
         finish();

@@ -69,7 +69,7 @@ public class EditActivity extends AppCompatActivity implements
         NewPassword_Dialog.NewPassword_DialogListener ,
         Password_Dialog.Password_DialogListenerActionHidden {
     public static int PESDK_RESULT = 1;
-
+    private String VIDEO = "mp4";
     private Toolbar toolbar;
     private VideoView videoView;
     private AppCompatImageView imageView;
@@ -93,7 +93,7 @@ public class EditActivity extends AppCompatActivity implements
         if (mPhoto != null)
         {
             toolbar.setTitle(mPhoto.getDisplayName());
-            if (mPhoto.isImage()) {
+            if (mPhoto.isImage() && !mPhoto.getPath().contains(VIDEO)) {
 
                 imageView.setVisibility(View.VISIBLE);
                 videoView.setVisibility(View.INVISIBLE);

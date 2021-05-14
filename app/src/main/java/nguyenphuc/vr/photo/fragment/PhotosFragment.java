@@ -3,6 +3,10 @@ package nguyenphuc.vr.photo.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,18 +14,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
 import java.util.ArrayList;
 
 import nguyenphuc.vr.photo.R;
 import nguyenphuc.vr.photo.adapter.AdapterPhotos;
 import nguyenphuc.vr.photo.model.ImageGrallery;
 import nguyenphuc.vr.photo.model.ItemView;
-import nguyenphuc.vr.photo.model.Photos;
 import nguyenphuc.vr.photo.model.Settings;
 
 public class PhotosFragment extends Fragment {

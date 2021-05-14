@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import nguyenphuc.vr.photo.R;
 import nguyenphuc.vr.photo.model.ItemView;
 import nguyenphuc.vr.photo.model.Photos;
-import nguyenphuc.vr.photo.model.Time;
 import nguyenphuc.vr.photo.model.Type;
 
 public class AdapterPhotos extends RecyclerView.Adapter<RecyclerView.ViewHolder>{

@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements
                 getString(R.string.preference_file_key), Context.MODE_PRIVATE);
 
         this.action_View = sharedPref.getString(Settings.ACTION_VIEW, Settings.ACTION_VIEW_PUBLIC);
+        Log.i("MainActivity_View", this.action_View);
     }
 
     private void loadTheme() {

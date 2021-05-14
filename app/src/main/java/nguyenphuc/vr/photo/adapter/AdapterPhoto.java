@@ -27,7 +27,7 @@ import nguyenphuc.vr.photo.model.Settings;
 public class AdapterPhoto extends RecyclerView.Adapter<AdapterPhoto.ImgViewHolder>{
     private ArrayList<Photo> data;
     private Context context;
-
+    private String VIDEO = "mp4";
 
 
     public AdapterPhoto(Context context, ArrayList<Photo> data) {
@@ -56,7 +56,7 @@ public class AdapterPhoto extends RecyclerView.Adapter<AdapterPhoto.ImgViewHolde
                 .placeholder(R.drawable.ic_launcher_foreground)
                 .into(imgViewHolder.imgPhoto);
 
-        if (!data.get(position).isImage()) {
+        if (!data.get(position).isImage() && data.get(position).getPath().contains(VIDEO)) {
             imgViewHolder.txtDuration.setText(
                     new SimpleDateFormat("mm:ss").format(new Date(data.get(position).getDuration())));
         } else {

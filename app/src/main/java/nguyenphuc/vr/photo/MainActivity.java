@@ -201,18 +201,21 @@ public class MainActivity extends AppCompatActivity implements
                     Password_Dialog password_dialog = new Password_Dialog(password_HiddenDir, this, Settings.ACTION_HIDDEN_MODE);
                     password_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.password));
                 }
+                break;
             }
             case R.id.item_PublicMode: {
                 loadModeView();
                 changeModeViewPublic();
                 photosFragment.newPicOrVideo(action_View);
                 loadFragment(photosFragment);
+                break;
             }
             case R.id.item_ChangLine: {
                 int now = loadLine();
                 ArrayList<Integer> lines = loadLines();
                 ChangLayout_Dialog changLayout_dialog = new ChangLayout_Dialog(now, lines, this);
                 changLayout_dialog.show(getSupportFragmentManager(), String.valueOf(R.string.column));
+                break;
             }
         }
         return super.onOptionsItemSelected(item);

@@ -412,17 +412,21 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void createFile() {
-        File Folder = new File(ImageGrallery.getDirMyFile());
+        File Folder = new File(ImageGrallery.getDirLike());
         Log.i("MainActivity", Folder.getPath());
 
         if (Folder.mkdir()) {
 
-            Log.i("MainActivity", "Success!");
-            ImageGrallery.galleryAddPic(Folder.getPath(), this);
-            File mediaFile = new File(ImageGrallery.getDirLike());
-            mediaFile.mkdir();
-            Log.i("MainActivity", mediaFile.getPath());
+            Log.i("MainActivity", Folder.getName() + " Success!" );
 
+            ImageGrallery.galleryAddPic(Folder.getPath(), this);
+
+        } else {
+            Log.i("MainActivity",  Folder.getName() + " Fail!");
+        }
+
+        if (Folder.exists()) {
+            Log.i("MainActivity", Folder.getName() + " Exists!" );
         }
     }
 
@@ -442,7 +446,7 @@ public class MainActivity extends AppCompatActivity implements
             Log.i("MainActivity", mediaFile.getPath());
 
         if (mediaFile.exists()) {
-            Log.i("MainActivity", "Success!");
+            Log.i("MainActivity", mediaFile.getName() + " Success!");
         }
     }
 

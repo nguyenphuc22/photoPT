@@ -16,7 +16,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-import ly.img.android.events.$EventCall_ProgressState_PREVIEW_BUSY;
 import nguyenphuc.vr.photo.R;
 
 public class ImageGrallery {
@@ -38,7 +37,7 @@ public class ImageGrallery {
 
     public static String getDirLike()
     {
-        return Environment.getExternalStorageDirectory() + "/" + MyFile +"/" + ImageGrallery.FILENAME_LIKE;
+        return Environment.getExternalStorageDirectory()  +"/" + ImageGrallery.FILENAME_LIKE;
     }
 
     public static String getPath(Context context,String dir)

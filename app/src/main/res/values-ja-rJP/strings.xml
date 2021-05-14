@@ -39,5 +39,6 @@
     <string name="Locatenoti">利用不可</string>
     <string name="photo">画像</string>
     <string name="column">カラム</string>
-    <string name="pixel">asd</string>
+    <string name="pixel">ピクセル</string>
+    <string name="preference_file_key">テーマを読み込む</string>
 </resources>

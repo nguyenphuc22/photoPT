@@ -297,9 +297,16 @@ public class ImageGrallery {
                 MediaStore.Files.FileColumns.MEDIA_TYPE,
         };
 
+
         String orderBy = MediaStore.Video.Media.DATE_ADDED;
-        cursor = context.getContentResolver().
-                query(uri, projection, null, null, orderBy + " DESC");
+        try {
+            cursor = context.getContentResolver().
+                    query(uri, projection, null, null, orderBy + " DESC");
+        } catch (Exception e)
+        {
+            return null;
+        }
+
 
         column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
         column_index_added = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED);
